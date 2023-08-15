@@ -20,6 +20,8 @@ enum DerivationType {
   electrum1,
   @HiveField(5)
   electrum2,
+  @HiveField(6)
+  decred,
 }
 
 class DerivationInfo {
