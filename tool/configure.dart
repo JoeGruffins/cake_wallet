@@ -5,6 +5,7 @@ const moneroOutputPath = 'lib/monero/monero.dart';
 const havenOutputPath = 'lib/haven/haven.dart';
 const ethereumOutputPath = 'lib/ethereum/ethereum.dart';
 const nanoOutputPath = 'lib/nano/nano.dart';
+const decredOutputPath = 'lib/decred/decred.dart';
 const walletTypesPath = 'lib/wallet_types.g.dart';
 const pubspecDefaultPath = 'pubspec_default.yaml';
 const pubspecOutputPath = 'pubspec.yaml';
@@ -17,13 +18,14 @@ Future<void> main(List<String> args) async {
   final hasEthereum = args.contains('${prefix}ethereum');
   final hasNano = args.contains('${prefix}nano');
   final hasBanano = args.contains('${prefix}banano');
-
+  final hasDecred = args.contains('${prefix}decred');
   await generateBitcoin(hasBitcoin);
   await generateMonero(hasMonero);
   await generateHaven(hasHaven);
   await generateEthereum(hasEthereum);
   await generateNano(hasNano);
   // await generateBanano(hasEthereum);
+  await generateDecred(hasDecred);
 
   await generatePubspec(
     hasMonero: hasMonero,
@@ -32,6 +34,7 @@ Future<void> main(List<String> args) async {
     hasEthereum: hasEthereum,
     hasNano: hasNano,
     hasBanano: hasBanano,
+    hasDecred: hasDecred,
   );
   await generateWalletTypes(
     hasMonero: hasMonero,
@@ -40,6 +43,7 @@ Future<void> main(List<String> args) async {
     hasEthereum: hasEthereum,
     hasNano: hasNano,
     hasBanano: hasBanano,
+    hasDecred: hasDecred,
   );
 }
 
@@ -710,6 +714,97 @@ abstract class NanoUtil {
   await outputFile.writeAsString(output);
 }
 
+Future<void> generateDecred(bool hasImplementation) async {
+  final outputFile = File(decredOutputPath);
+  const decredCommonHeaders = """
+import 'package:cw_core/wallet_credentials.dart';
+import 'package:cw_core/wallet_info.dart';
+import 'package:cw_core/transaction_priority.dart';
+import 'package:cw_core/output_info.dart';
+import 'package:cw_core/unspent_coins_info.dart';
+import 'package:cw_core/wallet_service.dart';
+import 'package:cake_wallet/view_model/send/output.dart';
+import 'package:hive/hive.dart';""";
+  const decredCWHeaders = """
+import 'package:cw_decred/electrum_wallet.dart';
+import 'package:cw_decred/decred_unspent.dart';
+import 'package:cw_decred/decred_mnemonic.dart';
+import 'package:cw_decred/decred_transaction_priority.dart';
+import 'package:cw_decred/decred_wallet.dart';
+import 'package:cw_decred/decred_wallet_service.dart';
+import 'package:cw_decred/decred_wallet_creation_credentials.dart';
+import 'package:cw_decred/decred_amount_format.dart';
+import 'package:cw_decred/decred_address_record.dart';
+import 'package:cw_decred/decred_transaction_credentials.dart';
+""";
+  const decredCwPart = "part 'cw_decred.dart';";
+  const decredContent = """
+class Unspent {
+  Unspent(this.address, this.hash, this.value, this.vout)
+      : isSending = true,
+        isFrozen = false,
+        note = '';
+
+  final String address;
+  final String hash;
+  final int value;
+  final int vout;
+  
+  bool isSending;
+  bool isFrozen;
+  String note;
+
+  bool get isP2wpkh => address.startsWith('bc') || address.startsWith('ltc');
+}
+
+abstract class Decred {
+  TransactionPriority getMediumTransactionPriority();
+
+  WalletCredentials createDecredRestoreWalletFromSeedCredentials({required String name, required String mnemonic, required String password});
+  WalletCredentials createDecredRestoreWalletFromWIFCredentials({required String name, required String password, required String wif, WalletInfo? walletInfo});
+  WalletCredentials createDecredNewWalletCredentials({required String name, WalletInfo? walletInfo});
+  List<String> getWordList();
+  Map<String, String> getWalletKeys(Object wallet);
+  List<TransactionPriority> getTransactionPriorities();
+  TransactionPriority deserializeDecredTransactionPriority(int raw); 
+  int getFeeRate(Object wallet, TransactionPriority priority);
+  Future<void> generateNewAddress(Object wallet);
+  Object createDecredTransactionCredentials(List<Output> outputs, {required TransactionPriority priority, int? feeRate});
+  Object createDecredTransactionCredentialsRaw(List<OutputInfo> outputs, {TransactionPriority? priority, required int feeRate});
+
+  List<String> getAddresses(Object wallet);
+  String getAddress(Object wallet);
+
+  String formatterDecredAmountToString({required int amount});
+  double formatterDecredAmountToDouble({required int amount});
+  int formatterStringDoubleToDecredAmount(String amount);
+  String decredTransactionPriorityWithLabel(TransactionPriority priority, int rate);
+
+  List<Unspent> getUnspents(Object wallet);
+  void updateUnspents(Object wallet);
+  WalletService createDecredWalletService(Box<WalletInfo> walletInfoSource, Box<UnspentCoinsInfo> unspentCoinSource);
+  TransactionPriority getDecredTransactionPriorityMedium();
+  TransactionPriority getDecredTransactionPrioritySlow();
+}
+  """;
+
+  const decredEmptyDefinition = 'Decred? decred;\n';
+  const decredCWDefinition = 'Decred? decred = CWDecred();\n';
+
+  final output = '$decredCommonHeaders\n'
+    + (hasImplementation ? '$decredCWHeaders\n' : '\n')
+    + (hasImplementation ? '$decredCwPart\n\n' : '\n')
+    + (hasImplementation ? decredCWDefinition : decredEmptyDefinition)
+    + '\n'
+    + decredContent;
+
+  if (outputFile.existsSync()) {
+    await outputFile.delete();
+  }
+
+  await outputFile.writeAsString(output);
+}
+
 Future<void> generatePubspec({
   required bool hasMonero,
   required bool hasBitcoin,
@@ -717,6 +812,7 @@ Future<void> generatePubspec({
   required bool hasEthereum,
   required bool hasNano,
   required bool hasBanano,
+  required bool hasDecred,
 }) async {
   const cwCore = """
   cw_core:
@@ -750,6 +846,10 @@ Future<void> generatePubspec({
   cw_banano:
     path: ./cw_banano
   """;
+  const cwDecred = """
+  cw_decred:
+    path: ./cw_decred
+  """;
   final inputFile = File(pubspecOutputPath);
   final inputText = await inputFile.readAsString();
   final inputLines = inputText.split('\n');
@@ -774,6 +874,10 @@ Future<void> generatePubspec({
 
   if (hasBanano) {
     output += '\n$cwBanano';
+  }
+
+  if (hasDecred) {
+    output += '\n$cwDecred';
   }
 
   if (hasHaven && !hasMonero) {
@@ -801,6 +905,7 @@ Future<void> generateWalletTypes({
   required bool hasEthereum,
   required bool hasNano,
   required bool hasBanano,
+  required bool hasDecred,
 }) async {
   final walletTypesFile = File(walletTypesPath);
 
@@ -838,6 +943,10 @@ Future<void> generateWalletTypes({
 
   if (hasHaven) {
     outputContent += '\tWalletType.haven,\n';
+  }
+
+  if (hasDecred) {
+    outputContent += '\tWalletType.decred,\n';
   }
 
   outputContent += '];\n';
