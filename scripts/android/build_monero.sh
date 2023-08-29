@@ -26,29 +26,29 @@ mkdir -p $DEST_INCLUDE_DIR
 case $arch in
 	"aarch"	)
 		CLANG=arm-linux-androideabi-clang
- 		CXXLANG=arm-linux-androideabi-clang++
+		CXXLANG=arm-linux-androideabi-clang++
 		BUILD_64=OFF
 		TAG="android-armv7"
 		ARCH="armv7-a"
 		ARCH_ABI="armeabi-v7a"
 		FLAGS="-D CMAKE_ANDROID_ARM_MODE=ON -D NO_AES=true";;
 	"aarch64"	)
-		CLANG=aarch64-linux-androideabi-clang
- 		CXXLANG=aarch64-linux-androideabi-clang++
+		CLANG=aarch64-linux-android-clang
+		CXXLANG=aarch64-linux-android-clang++
 		BUILD_64=ON
 		TAG="android-armv8"
 		ARCH="armv8-a"
 		ARCH_ABI="arm64-v8a";;
 	"i686"		)
-		CLANG=i686-linux-androideabi-clang
- 		CXXLANG=i686-linux-androideabi-clang++
+		CLANG=i686-linux-android-clang
+		CXXLANG=i686-linux-android-clang++
 		BUILD_64=OFF
 		TAG="android-x86"
 		ARCH="i686"
 		ARCH_ABI="x86";;
 	"x86_64"	)  
-		CLANG=x86_64-linux-androideabi-clang
- 		CXXLANG=x86_64-linux-androideabi-clang++
+		CLANG=x86_64-linux-android-clang
+		CXXLANG=x86_64-linux-android-clang++
 		BUILD_64=ON
 		TAG="android-x86_64"
 		ARCH="x86-64"
