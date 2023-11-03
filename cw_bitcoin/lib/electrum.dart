@@ -22,10 +22,7 @@ String jsonrpc(
     '{"jsonrpc": "$version", "method": "$method", "id": "$id",  "params": ${json.encode(params)}}\n';
 
 class SocketTask {
-  SocketTask({
-    required this.isSubscription,
-    this.completer,
-    this.subject});
+  SocketTask({required this.isSubscription, this.completer, this.subject});
 
   final Completer<dynamic>? completer;
   final BehaviorSubject<dynamic>? subject;
@@ -52,7 +49,7 @@ class ElectrumClient {
   String unterminatedString;
 
   Future<void> connectToUri(Uri uri) async =>
-    await connect(host: uri.host, port: uri.port);
+      await connect(host: uri.host, port: uri.port);
 
   Future<void> connect({required String host, required int port}) async {
     try {
@@ -105,12 +102,13 @@ class ElectrumClient {
 
       if (isJSONStringCorrect(unterminatedString)) {
         final response =
-        json.decode(unterminatedString) as Map<String, dynamic>;
+            json.decode(unterminatedString) as Map<String, dynamic>;
         _handleResponse(response);
         unterminatedString = '';
       }
     } on TypeError catch (e) {
-      if (!e.toString().contains('Map<String, Object>') && !e.toString().contains('Map<String, dynamic>')) {
+      if (!e.toString().contains('Map<String, Object>') &&
+          !e.toString().contains('Map<String, dynamic>')) {
         return;
       }
 
@@ -118,7 +116,7 @@ class ElectrumClient {
 
       if (isJSONStringCorrect(unterminatedString)) {
         final response =
-        json.decode(unterminatedString) as Map<String, dynamic>;
+            json.decode(unterminatedString) as Map<String, dynamic>;
         _handleResponse(response);
         // unterminatedString = null;
         unterminatedString = '';
@@ -231,7 +229,10 @@ class ElectrumClient {
 
   Future<Map<String, dynamic>> getTransactionRaw(
           {required String hash}) async =>
-      callWithTimeout(method: 'blockchain.transaction.get', params: [hash, true], timeout: 10000)
+      callWithTimeout(
+              method: 'blockchain.transaction.get',
+              params: [hash, true],
+              timeout: 10000)
           .then((dynamic result) {
         if (result is Map<String, dynamic>) {
           return result;
@@ -240,9 +241,11 @@ class ElectrumClient {
         return <String, dynamic>{};
       });
 
-  Future<String> getTransactionHex(
-          {required String hash}) async =>
-      callWithTimeout(method: 'blockchain.transaction.get', params: [hash, false], timeout: 10000)
+  Future<String> getTransactionHex({required String hash}) async =>
+      callWithTimeout(
+              method: 'blockchain.transaction.get',
+              params: [hash, false],
+              timeout: 10000)
           .then((dynamic result) {
         if (result is String) {
           return result;
@@ -251,8 +254,7 @@ class ElectrumClient {
         return '';
       });
 
-  Future<String> broadcastTransaction(
-          {required String transactionRaw}) async =>
+  Future<String> broadcastTransaction({required String transactionRaw}) async =>
       call(method: 'blockchain.transaction.broadcast', params: [transactionRaw])
           .then((dynamic result) {
         if (result is String) {
@@ -353,13 +355,14 @@ class ElectrumClient {
       socket!.write(jsonrpc(method: method, id: _id, params: params));
 
       return subscription;
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-  Future<dynamic> call({required String method, List<Object> params = const []}) async {
+  Future<dynamic> call(
+      {required String method, List<Object> params = const []}) async {
     final completer = Completer<dynamic>();
     _id += 1;
     final id = _id;
@@ -386,7 +389,7 @@ class ElectrumClient {
       });
 
       return completer.future;
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -397,8 +400,9 @@ class ElectrumClient {
     onConnectionStatusChange = null;
   }
 
-  void _registryTask(int id, Completer<dynamic> completer) => _tasks[id.toString()] =
-      SocketTask(completer: completer, isSubscription: false);
+  void _registryTask(int id, Completer<dynamic> completer) =>
+      _tasks[id.toString()] =
+          SocketTask(completer: completer, isSubscription: false);
 
   void _regisrySubscription(String id, BehaviorSubject<dynamic> subject) =>
       _tasks[id] = SocketTask(subject: subject, isSubscription: true);
@@ -451,8 +455,8 @@ class ElectrumClient {
       _methodHandler(method: method, request: response);
       return;
     }
-    
-    if (id != null){
+
+    if (id != null) {
       _finish(id, result);
     }
   }
