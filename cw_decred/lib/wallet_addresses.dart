@@ -1,13 +1,11 @@
 import 'package:cw_core/wallet_addresses.dart';
 import 'package:cw_core/wallet_info.dart';
-import 'package:cw_core/address_info.dart';
 import 'package:cw_decred/api/dcrlibwallet.dart';
-import 'package:mobx/mobx.dart';
 
 class DecredWalletAddresses extends WalletAddresses {
   DecredWalletAddresses(WalletInfo walletInfo, SPVWallet spv)
       : this.spv = spv,
-      super(walletInfo);
+        super(walletInfo);
 
   final SPVWallet spv;
 

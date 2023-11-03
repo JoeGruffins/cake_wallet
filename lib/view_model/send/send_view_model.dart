@@ -371,7 +371,6 @@ abstract class SendViewModelBase extends WalletChangeListenerViewModel with Stor
       case WalletType.ethereum:
         return ethereum!.createEthereumTransactionCredentials(outputs,
             priority: priority!, currency: selectedCryptoCurrency);
-
       case WalletType.nano:
         return nano!.createNanoTransactionCredentials(outputs);
 

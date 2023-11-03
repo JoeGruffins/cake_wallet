@@ -1,6 +1,6 @@
 import 'package:cw_core/wallet_info.dart';
 import 'package:cw_core/sync_status.dart';
-import 'package:cw_decred/unspent.dart';
+import 'package:cw_core/unspent_transaction_output.dart';
 import 'package:cw_decred/balance.dart';
 import 'package:cw_decred/pending_transaction.dart';
 import 'package:cw_decred/transaction_info.dart';
@@ -12,18 +12,13 @@ import 'dart:io';
 class SPVWallet {
   SPVWallet();
 
-  SPVWallet create(Uint8List seed,
-    String password,
-    WalletInfo walletInfo) {
-      return SPVWallet();
-    }
+  SPVWallet create(Uint8List seed, String password, WalletInfo walletInfo) {
+    return SPVWallet();
+  }
 
-  SPVWallet load(
-    String password,
-    String name,
-    WalletInfo walletInfo) {
-      return SPVWallet();
-    }
+  SPVWallet load(String password, String name, WalletInfo walletInfo) {
+    return SPVWallet();
+  }
 
   DecredBalance balance() {
     return DecredBalance(
@@ -45,22 +40,24 @@ class SPVWallet {
   void close() {}
 
   DecredPendingTransaction createTransaction(Object credentials) {
-    return DecredPendingTransaction(spv: this,
-      txid: "3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02",
-      amount: 12345678,
-      fee: 1234,
-      rawHex: "baadbeef");
+    return DecredPendingTransaction(
+        spv: this,
+        txid:
+            "3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02",
+        amount: 12345678,
+        fee: 1234,
+        rawHex: "baadbeef");
   }
 
-  void rescan(int height){
-    sleep(Duration(seconds:10));
+  void rescan(int height) {
+    sleep(Duration(seconds: 10));
   }
 
-  void startSync(){
-    sleep(Duration(seconds:5));
+  void startSync() {
+    sleep(Duration(seconds: 5));
   }
 
-  SyncStatus syncStatus(){
+  SyncStatus syncStatus() {
     return SyncedSyncStatus();
   }
 
@@ -80,7 +77,9 @@ class SPVWallet {
       confirmations: 0,
       to: "DsT4qJPPaYEuQRimfgvSKxKH3paysn1x3Nt",
     );
-    return {"3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02": txInfo};
+    return {
+      "3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02": txInfo
+    };
   }
 
   String newAddress() {
@@ -89,11 +88,21 @@ class SPVWallet {
   }
 
   List<String> addresses() {
-    return ["DsT4qJPPaYEuQRimfgvSKxKH3paysn1x3Nt", "DsVZGfGpd7WVffBZ5wbFZEHLV3FHNmXs9Az"];
+    return [
+      "DsT4qJPPaYEuQRimfgvSKxKH3paysn1x3Nt",
+      "DsVZGfGpd7WVffBZ5wbFZEHLV3FHNmXs9Az"
+    ];
   }
 
   List<Unspent> unspents() {
-    return [Unspent("DsT4qJPPaYEuQRimfgvSKxKH3paysn1x3Nt", "3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02", 1234567, 0)];
+    return [
+      Unspent(
+          "DsT4qJPPaYEuQRimfgvSKxKH3paysn1x3Nt",
+          "3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02",
+          1234567,
+          0,
+          null)
+    ];
   }
 
   void changePassword(String newPW) {}

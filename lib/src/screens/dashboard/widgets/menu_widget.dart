@@ -35,6 +35,7 @@ class MenuWidgetState extends State<MenuWidget> {
       this.bitcoinCashIcon = Image.asset('assets/images/bch_icon.png'),
       this.decredIcon = Image.asset('assets/images/decred_menu.png');
 
+
   final largeScreen = 731;
 
   double menuWidth;

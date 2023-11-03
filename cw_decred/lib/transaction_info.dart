@@ -1,7 +1,5 @@
 import 'package:cw_core/transaction_direction.dart';
-import 'package:cw_core/keyable.dart';
 import 'package:cw_core/transaction_info.dart';
-import 'package:cw_core/transaction_direction.dart';
 import 'package:cw_core/format_amount.dart';
 import 'package:cw_core/wallet_type.dart';
 import 'package:cw_decred/amount_format.dart';
@@ -33,11 +31,11 @@ class DecredTransactionInfo extends TransactionInfo {
 
   @override
   String amountFormatted() =>
-    '${formatAmount(decredAmountToString(amount: amount))} ${walletTypeToCryptoCurrency(WalletType.decred).title}';
+      '${formatAmount(decredAmountToString(amount: amount))} ${walletTypeToCryptoCurrency(WalletType.decred).title}';
 
   @override
   String? feeFormatted() =>
-    '${formatAmount(decredAmountToString(amount: amount))} ${walletTypeToCryptoCurrency(WalletType.decred).title}';
+      '${formatAmount(decredAmountToString(amount: amount))} ${walletTypeToCryptoCurrency(WalletType.decred).title}';
 
   @override
   String fiatAmount() => _fiatAmount ?? '';

@@ -1,17 +1,12 @@
-import 'dart:convert';
-import 'package:cw_core/wallet_info.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cw_core/transaction_info.dart';
-import 'package:cw_decred/api/dcrlibwallet.dart';
 import 'package:cw_core/transaction_history.dart';
-import 'package:cw_core/wallet_type.dart';
 
 // NOTE: Methods currently not used.
-class DecredTransactionHistory
-  extends TransactionHistoryBase<TransactionInfo> {
-    DecredTransactionHistory() {
-        transactions = ObservableMap<String, TransactionInfo>();
-    }
+class DecredTransactionHistory extends TransactionHistoryBase<TransactionInfo> {
+  DecredTransactionHistory() {
+    transactions = ObservableMap<String, TransactionInfo>();
+  }
 
   Future<void> init() async {}
 
@@ -30,5 +25,4 @@ class DecredTransactionHistory
 
   void _update(TransactionInfo transaction) =>
       transactions[transaction.id] = transaction;
-
 }

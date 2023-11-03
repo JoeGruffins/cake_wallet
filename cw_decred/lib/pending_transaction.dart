@@ -4,11 +4,11 @@ import 'package:cw_decred/api/dcrlibwallet.dart';
 
 class DecredPendingTransaction with PendingTransaction {
   DecredPendingTransaction(
-    {required this.spv,
-    required this.txid,
-    required this.amount,
-    required this.fee,
-    required this.rawHex});
+      {required this.spv,
+      required this.txid,
+      required this.amount,
+      required this.fee,
+      required this.rawHex});
 
   final SPVWallet spv;
   final int amount;

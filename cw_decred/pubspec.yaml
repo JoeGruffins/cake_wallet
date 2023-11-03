@@ -12,18 +12,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^2.0.11
-  http: ^1.1.0
-  mobx: ^2.0.7+4
-  flutter_mobx: ^2.0.6+1
-  intl: ^0.18.0
   cw_core:
     path: ../cw_core
-  rxdart: ^0.27.5
-  unorm_dart: ^0.2.0
-  cryptography: ^2.0.5
-  encrypt: ^5.0.1
-  meta: ^1.2.3
 
 dev_dependencies:
   flutter_test:

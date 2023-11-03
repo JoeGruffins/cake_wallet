@@ -1,13 +1,10 @@
 import 'package:cw_decred/transaction_history.dart';
 import 'package:cw_decred/wallet_addresses.dart';
-import 'package:cw_decred/unspent.dart';
 import 'package:cw_decred/transaction_priority.dart';
 import 'package:cw_decred/api/dcrlibwallet.dart';
 import 'package:cw_decred/balance.dart';
 import 'package:cw_decred/transaction_info.dart';
 import 'package:cw_core/crypto_currency.dart';
-import 'package:cw_core/unspent_coins_info.dart';
-import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -18,41 +15,44 @@ import 'package:cw_core/pending_transaction.dart';
 import 'package:cw_core/pathForWallet.dart';
 import 'package:cw_core/sync_status.dart';
 import 'package:cw_core/node.dart';
+import 'package:cw_core/unspent_transaction_output.dart';
 
 part 'wallet.g.dart';
 
 class DecredWallet = DecredWalletBase with _$DecredWallet;
 
-abstract class DecredWalletBase extends WalletBase<DecredBalance, DecredTransactionHistory, DecredTransactionInfo> with Store {
-  DecredWalletBase( SPVWallet spv, WalletInfo walletInfo)
-    : this.spv = spv,
-      balance = ObservableMap<CryptoCurrency, DecredBalance>.of({CryptoCurrency.dcr: spv.balance()}),
-      syncStatus = NotConnectedSyncStatus(),
-    super(walletInfo){
-      transactionHistory = DecredTransactionHistory();
-      walletAddresses = DecredWalletAddresses(walletInfo, spv);
-    }
+abstract class DecredWalletBase extends WalletBase<DecredBalance,
+    DecredTransactionHistory, DecredTransactionInfo> with Store {
+  DecredWalletBase(SPVWallet spv, WalletInfo walletInfo)
+      : this.spv = spv,
+        balance = ObservableMap<CryptoCurrency, DecredBalance>.of(
+            {CryptoCurrency.dcr: spv.balance()}),
+        syncStatus = NotConnectedSyncStatus(),
+        super(walletInfo) {
+    transactionHistory = DecredTransactionHistory();
+    walletAddresses = DecredWalletAddresses(walletInfo, spv);
+  }
 
   final SPVWallet spv;
 
-  static Future<DecredWallet> create (
-    {required String mnemonic,
-    required String password,
-    required WalletInfo walletInfo}) async {
-      final seed = mnemonicToSeedBytes(mnemonic);
-      final spv = SPVWallet().create(seed, password, walletInfo);
-      final wallet = DecredWallet(spv, walletInfo);
-      return wallet;
-    }
+  static Future<DecredWallet> create(
+      {required String mnemonic,
+      required String password,
+      required WalletInfo walletInfo}) async {
+    final seed = mnemonicToSeedBytes(mnemonic);
+    final spv = SPVWallet().create(seed, password, walletInfo);
+    final wallet = DecredWallet(spv, walletInfo);
+    return wallet;
+  }
 
-  static Future<DecredWallet> open (
-    {required String password,
-    required String name,
-    required WalletInfo walletInfo}) async {
-      final spv = SPVWallet().load(name, password, walletInfo);
-      final wallet = DecredWallet(spv, walletInfo);
-      return wallet;
-    }
+  static Future<DecredWallet> open(
+      {required String password,
+      required String name,
+      required WalletInfo walletInfo}) async {
+    final spv = SPVWallet().load(name, password, walletInfo);
+    final wallet = DecredWallet(spv, walletInfo);
+    return wallet;
+  }
 
   // TODO: Set up a way to change the balance and sync status when dcrlibwallet
   // changes. Long polling probably?
@@ -68,7 +68,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance, DecredTransact
   // set syncStatus(SyncStatus status);
 
   @override
-  String? get seed{
+  String? get seed {
     // throw UnimplementedError();
     return "";
   }
@@ -117,7 +117,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance, DecredTransact
   int feeRate(TransactionPriority priority) {
     try {
       return this.spv.feeRate(priority.raw);
-    } catch(_) {
+    } catch (_) {
       return 0;
     }
   }
@@ -125,7 +125,8 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance, DecredTransact
   @override
   int calculateEstimatedFee(TransactionPriority priority, int? amount) {
     if (priority is DecredTransactionPriority) {
-      return this.spv.calculateEstimatedFeeWithFeeRate(this.spv.feeRate(priority.raw), amount ?? 0);
+      return this.spv.calculateEstimatedFeeWithFeeRate(
+          this.spv.feeRate(priority.raw), amount ?? 0);
     }
 
     return 0;
@@ -166,10 +167,12 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance, DecredTransact
   }
 
   @override
-  void setExceptionHandler(void Function(FlutterErrorDetails) onError) => onError;
+  void setExceptionHandler(void Function(FlutterErrorDetails) onError) =>
+      onError;
 
   Future<void> renameWalletFiles(String newWalletName) async {
-    final currentWalletPath = await pathForWallet(name: walletInfo.name, type: type);
+    final currentWalletPath =
+        await pathForWallet(name: walletInfo.name, type: type);
     final currentWalletFile = File(currentWalletPath);
 
     final currentDirPath =
@@ -179,7 +182,8 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance, DecredTransact
 
     // Copies current wallet files into new wallet name's dir and files
     if (currentWalletFile.existsSync()) {
-      final newWalletPath = await pathForWallet(name: newWalletName, type: type);
+      final newWalletPath =
+          await pathForWallet(name: newWalletName, type: type);
       await currentWalletFile.copy(newWalletPath);
     }
 

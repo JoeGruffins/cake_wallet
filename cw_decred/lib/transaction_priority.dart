@@ -21,7 +21,8 @@ class DecredTransactionPriority extends TransactionPriority {
       case 2:
         return fast;
       default:
-        throw Exception('Unexpected token: $raw for DecredTransactionPriority deserialize');
+        throw Exception(
+            'Unexpected token: $raw for DecredTransactionPriority deserialize');
     }
   }
 
@@ -33,7 +34,8 @@ class DecredTransactionPriority extends TransactionPriority {
 
     switch (this) {
       case DecredTransactionPriority.slow:
-        label = 'Slow ~24hrs'; // '${S.current.transaction_priority_slow} ~24hrs';
+        label =
+            'Slow ~24hrs'; // '${S.current.transaction_priority_slow} ~24hrs';
         break;
       case DecredTransactionPriority.medium:
         label = 'Medium'; // S.current.transaction_priority_medium;

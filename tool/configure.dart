@@ -21,6 +21,7 @@ Future<void> main(List<String> args) async {
   final hasNano = args.contains('${prefix}nano');
   final hasBanano = args.contains('${prefix}banano');
   final hasDecred = args.contains('${prefix}decred');
+
   await generateBitcoin(hasBitcoin);
   await generateMonero(hasMonero);
   await generateHaven(hasHaven);
@@ -790,10 +791,10 @@ import 'package:cw_core/transaction_priority.dart';
 import 'package:cw_core/output_info.dart';
 import 'package:cw_core/unspent_coins_info.dart';
 import 'package:cw_core/wallet_service.dart';
+import 'package:cw_core/unspent_transaction_output.dart';
 import 'package:cake_wallet/view_model/send/output.dart';
 import 'package:hive/hive.dart';""";
   const decredCWHeaders = """
-import 'package:cw_decred/unspent.dart';
 import 'package:cw_decred/mnemonic.dart';
 import 'package:cw_decred/transaction_priority.dart';
 import 'package:cw_decred/wallet.dart';

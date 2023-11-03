@@ -25,41 +25,40 @@ class DecredWalletService extends WalletService<
   @override
   Future<DecredWallet> create(DecredNewWalletCredentials credentials) async {
     return await DecredWalletBase.create(
-      mnemonic: generateMnemonic(),
-      password: credentials.password!,
-      walletInfo: credentials.walletInfo!);
+        mnemonic: generateMnemonic(),
+        password: credentials.password!,
+        walletInfo: credentials.walletInfo!);
   }
 
   @override
   Future<bool> isWalletExit(String name) async =>
-    File(await pathForWallet(name: name, type: getType())).existsSync();
+      File(await pathForWallet(name: name, type: getType())).existsSync();
 
   @override
   Future<DecredWallet> openWallet(String name, String password) async {
     final walletInfo = walletInfoSource.values.firstWhereOrNull(
-      (info) => info.id == WalletBase.idFor(name, getType()))!;
+        (info) => info.id == WalletBase.idFor(name, getType()))!;
     final wallet = await DecredWalletBase.open(
-      password: password, name: name, walletInfo: walletInfo);
+        password: password, name: name, walletInfo: walletInfo);
     return wallet;
   }
 
   @override
   Future<void> remove(String wallet) async {
     File(await pathForWalletDir(name: wallet, type: getType()))
-      .delete(recursive: true);
+        .delete(recursive: true);
     final walletInfo = walletInfoSource.values.firstWhereOrNull(
-      (info) => info.id == WalletBase.idFor(wallet, getType()))!;
+        (info) => info.id == WalletBase.idFor(wallet, getType()))!;
     await walletInfoSource.delete(walletInfo.key);
   }
 
   @override
-  Future<void> rename(String currentName, String password, String newName) async {
+  Future<void> rename(
+      String currentName, String password, String newName) async {
     final currentWalletInfo = walletInfoSource.values.firstWhereOrNull(
-      (info) => info.id == WalletBase.idFor(currentName, getType()))!;
+        (info) => info.id == WalletBase.idFor(currentName, getType()))!;
     final currentWallet = await DecredWalletBase.open(
-      password: password,
-      name: currentName,
-      walletInfo: currentWalletInfo);
+        password: password, name: currentName, walletInfo: currentWalletInfo);
 
     await currentWallet.renameWalletFiles(newName);
 
@@ -78,14 +77,14 @@ class DecredWalletService extends WalletService<
     }
 
     final wallet = await DecredWalletBase.create(
-      password: credentials.password!,
-      mnemonic: credentials.mnemonic,
-      walletInfo: credentials.walletInfo!);
+        password: credentials.password!,
+        mnemonic: credentials.mnemonic,
+        walletInfo: credentials.walletInfo!);
     return wallet;
   }
 
   @override
   Future<DecredWallet> restoreFromKeys(
-    DecredRestoreWalletFromWIFCredentials credentials) async =>
+          DecredRestoreWalletFromWIFCredentials credentials) async =>
       throw UnimplementedError();
 }

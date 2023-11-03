@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:cw_decred/amount_format.dart';
 import 'package:cw_core/balance.dart';
 
@@ -10,8 +9,10 @@ class DecredBalance extends Balance {
   final int unconfirmed;
 
   @override
-  String get formattedAvailableBalance => decredAmountToString(amount: confirmed);
+  String get formattedAvailableBalance =>
+      decredAmountToString(amount: confirmed);
 
   @override
-  String get formattedAdditionalBalance => decredAmountToString(amount: unconfirmed);
+  String get formattedAdditionalBalance =>
+      decredAmountToString(amount: unconfirmed);
 }
