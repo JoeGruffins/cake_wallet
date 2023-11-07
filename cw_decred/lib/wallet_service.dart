@@ -1,8 +1,7 @@
 import 'dart:io';
-import 'package:cw_decred/mnemonic_is_incorrect_exception.dart';
+import 'package:cw_decred/api/libdcrwallet.dart';
 import 'package:cw_decred/wallet_creation_credentials.dart';
 import 'package:cw_decred/wallet.dart';
-import 'package:cw_decred/api/dcrlibwallet.dart';
 import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/wallet_service.dart';
 import 'package:cw_core/pathForWallet.dart';
@@ -19,27 +18,42 @@ class DecredWalletService extends WalletService<
 
   final Box<WalletInfo> walletInfoSource;
 
-  @override
-  WalletType getType() => WalletType.decred;
+  static void init() async {
+    // Use the general path for all dcr wallets as the general log directory.
+    // Individual wallet paths may be removed if the wallet is deleted.
+    final dcrLogDir = await pathForWalletDir(name: '', type: WalletType.decred);
+    initLibdcrwallet(dcrLogDir);
+  }
 
   @override
-  Future<DecredWallet> create(DecredNewWalletCredentials credentials) async {
-    return await DecredWalletBase.create(
-        mnemonic: generateMnemonic(),
-        password: credentials.password!,
-        walletInfo: credentials.walletInfo!);
-  }
+  WalletType getType() => WalletType.decred;
 
   @override
   Future<bool> isWalletExit(String name) async =>
       File(await pathForWallet(name: name, type: getType())).existsSync();
 
   @override
+  Future<DecredWallet> create(DecredNewWalletCredentials credentials) async {
+    await createWalletAsync(
+      name: credentials.walletInfo!.name,
+      dataDir: credentials.walletInfo!.dirPath,
+      password: credentials.password!,
+    );
+    final wallet = DecredWallet(credentials.walletInfo!, credentials.password!);
+    await wallet.init();
+    return wallet;
+  }
+
+  @override
   Future<DecredWallet> openWallet(String name, String password) async {
     final walletInfo = walletInfoSource.values.firstWhereOrNull(
         (info) => info.id == WalletBase.idFor(name, getType()))!;
-    final wallet = await DecredWalletBase.open(
-        password: password, name: name, walletInfo: walletInfo);
+    await loadWalletAsync(
+      name: walletInfo.name,
+      dataDir: walletInfo.dirPath,
+    );
+    final wallet = DecredWallet(walletInfo, password);
+    await wallet.init();
     return wallet;
   }
 
@@ -55,13 +69,10 @@ class DecredWalletService extends WalletService<
   @override
   Future<void> rename(
       String currentName, String password, String newName) async {
-    final currentWalletInfo = walletInfoSource.values.firstWhereOrNull(
-        (info) => info.id == WalletBase.idFor(currentName, getType()))!;
-    final currentWallet = await DecredWalletBase.open(
-        password: password, name: currentName, walletInfo: currentWalletInfo);
-
+    final currentWallet = await openWallet(currentName, password);
     await currentWallet.renameWalletFiles(newName);
 
+    final currentWalletInfo = currentWallet.walletInfo;
     final newWalletInfo = currentWalletInfo;
     newWalletInfo.id = WalletBase.idFor(newName, getType());
     newWalletInfo.name = newName;
@@ -72,15 +83,7 @@ class DecredWalletService extends WalletService<
   @override
   Future<DecredWallet> restoreFromSeed(
       DecredRestoreWalletFromSeedCredentials credentials) async {
-    if (!validateMnemonic(credentials.mnemonic)) {
-      throw DecredMnemonicIsIncorrectException();
-    }
-
-    final wallet = await DecredWalletBase.create(
-        password: credentials.password!,
-        mnemonic: credentials.mnemonic,
-        walletInfo: credentials.walletInfo!);
-    return wallet;
+    throw UnimplementedError();
   }
 
   @override
