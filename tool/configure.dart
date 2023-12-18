@@ -142,7 +142,7 @@ Future<void> generateMonero(bool hasImplementation) async {
   const moneroCommonHeaders = """
 import 'package:cw_core/unspent_transaction_output.dart';
 import 'package:cw_core/unspent_coins_info.dart';
-import 'package:cw_monero/monero_unspent.dart';
+// import 'package:cw_monero/monero_unspent.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cw_core/wallet_credentials.dart';
 import 'package:cw_core/wallet_info.dart';
