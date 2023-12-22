@@ -108,6 +108,8 @@ class Node extends HiveObject with Keyable {
       case WalletType.solana:
       case WalletType.tron:
         return Uri.https(uriRaw, path ?? '');
+      case WalletType.decred:
+        return Uri.http(uriRaw, '');
       case WalletType.none:
         throw Exception('Unexpected type ${type.toString()} for Node uri');
     }
@@ -167,6 +169,8 @@ class Node extends HiveObject with Keyable {
         case WalletType.solana:
         case WalletType.tron:
           return requestElectrumServer();
+        case WalletType.decred:
+          return requestDecredNode();
         case WalletType.none:
           return false;
       }
@@ -290,4 +294,8 @@ class Node extends HiveObject with Keyable {
       return false;
     }
   }
+}
+
+  Future<bool> requestDecredNode() async {
+    return true;
 }
