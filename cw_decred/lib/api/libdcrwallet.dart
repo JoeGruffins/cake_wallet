@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:cw_decred/api/libdcrwallet_bindings.dart';
 import 'package:cw_decred/api/util.dart';
 
+final int ErrCodeNotSynced = 1;
+
 final String libraryName =
     Platform.isAndroid || Platform.isLinux // TODO: Linux.
         ? 'libdcrwallet.so'
@@ -16,11 +18,12 @@ final dcrwalletApi = libdcrwallet(DynamicLibrary.open(libraryName));
 /// it ready for use. This must be done before attempting to create, load or use
 /// a wallet.
 void initLibdcrwallet(String logDir) {
-  final cLogDIr = logDir.toCString();
-  handleErrorAndPointers(
-    fn: () => dcrwalletApi.initialize(cLogDIr),
-    ptrsToFree: [cLogDIr],
+  final cLogDir = logDir.toCString();
+  final res = payloadAndPointers(
+    fn: () => dcrwalletApi.initialize(cLogDir),
+    ptrsToFree: [cLogDir],
   );
+  checkErr(res.err);
 }
 
 /// createWalletAsync calls the libdcrwallet's createWallet function
@@ -43,10 +46,11 @@ void createWalletSync(Map<String, String> args) {
   final password = args["password"]!.toCString();
   final network = "testnet".toCString();
 
-  handleErrorAndPointers(
+  final res = payloadAndPointers(
     fn: () => dcrwalletApi.createWallet(name, dataDir, network, password),
     ptrsToFree: [name, dataDir, network, password],
   );
+  checkErr(res.err);
 }
 
 /// loadWalletAsync calls the libdcrwallet's loadWallet function asynchronously.
@@ -63,11 +67,11 @@ void loadWalletSync(Map<String, String> args) {
   final name = args["name"]!.toCString();
   final dataDir = args["dataDir"]!.toCString();
   final network = "testnet".toCString();
-
-  handleErrorAndPointers(
+  final res = payloadAndPointers(
     fn: () => dcrwalletApi.loadWallet(name, dataDir, network),
     ptrsToFree: [name, dataDir, network],
   );
+  checkErr(res.err);
 }
 
 void closeWallet(String walletName) {
@@ -82,23 +86,38 @@ Future<void> changeWalletPassword(
 String? walletSeed(String walletName, String walletPassword) {
   final cName = walletName.toCString();
   final pass = walletPassword.toCString();
-  final seed = dcrwalletApi.walletSeed(cName, pass);
-  freePointers([cName, pass]);
-  return seed.toDartString();
+  final res = payloadAndPointers(
+    fn: () => dcrwalletApi.walletSeed(cName, pass),
+    ptrsToFree: [cName, pass],
+  );
+  checkErr(res.err);
+  return res.payload;
 }
 
 String? currentReceiveAddress(String walletName) {
   final cName = walletName.toCString();
-  final currentAddress = dcrwalletApi.currentReceiveAddress(cName);
-  cName.free();
-  return currentAddress.toDartString();
+  final res = payloadAndPointers(
+    fn: () => dcrwalletApi.currentReceiveAddress(cName),
+    ptrsToFree: [cName],
+  );
+
+  if (res.errCode == ErrCodeNotSynced) {
+    // Wallet is not synced. We do not want to give out a used address so give
+    // nothing.
+    return null;
+  }
+  checkErr(res.err);
+  return res.payload;
 }
 
 Map balance(String walletName) {
   final cName = walletName.toCString();
-  final balJson = dcrwalletApi.walletBalance(cName).toDartString();
-  cName.free();
-  return jsonDecode(balJson!);
+  final res = payloadAndPointers(
+    fn: () => dcrwalletApi.walletBalance(cName),
+    ptrsToFree: [cName],
+  );
+  checkErr(res.err);
+  return jsonDecode(res.payload);
 }
 
 int calculateEstimatedFeeWithFeeRate(int feeRate, int amount) {
