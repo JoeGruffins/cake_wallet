@@ -651,11 +651,6 @@ abstract class SettingsStoreBase with Store {
   Node getCurrentNode(WalletType walletType) {
     final node = nodes[walletType];
 
-    // TODO: Implement connecting to a user's preferred node.
-    if (walletType == WalletType.decred) {
-      return Node();
-    }
-
     if (node == null) {
       throw Exception('No node found for wallet type: ${walletType.toString()}');
     }
@@ -838,6 +833,7 @@ abstract class SettingsStoreBase with Store {
     final polygonNodeId = sharedPreferences.getInt(PreferencesKey.currentPolygonNodeIdKey);
     final nanoNodeId = sharedPreferences.getInt(PreferencesKey.currentNanoNodeIdKey);
     final nanoPowNodeId = sharedPreferences.getInt(PreferencesKey.currentNanoPowNodeIdKey);
+    final decredNodeId = sharedPreferences.getInt(PreferencesKey.currentDecredNodeIdKey);
     final moneroNode = nodeSource.get(nodeId);
     final bitcoinElectrumServer = nodeSource.get(bitcoinElectrumServerId);
     final litecoinElectrumServer = nodeSource.get(litecoinElectrumServerId);
@@ -846,6 +842,7 @@ abstract class SettingsStoreBase with Store {
     final polygonNode = nodeSource.get(polygonNodeId);
     final bitcoinCashElectrumServer = nodeSource.get(bitcoinCashElectrumServerId);
     final nanoNode = nodeSource.get(nanoNodeId);
+    final decredNode = nodeSource.get(decredNodeId);
     final nanoPowNode = powNodeSource.get(nanoPowNodeId);
     final packageInfo = await PackageInfo.fromPlatform();
     final deviceName = await _getDeviceName() ?? '';
@@ -901,6 +898,10 @@ abstract class SettingsStoreBase with Store {
 
     if (nanoPowNode != null) {
       powNodes[WalletType.nano] = nanoPowNode;
+    }
+
+    if (decredNode != null) {
+      nodes[WalletType.decred] = decredNode;
     }
 
     final savedSyncMode = SyncMode.all.firstWhere((element) {
@@ -1127,6 +1128,7 @@ abstract class SettingsStoreBase with Store {
     final polygonNodeId = sharedPreferences.getInt(PreferencesKey.currentPolygonNodeIdKey);
     final nanoNodeId = sharedPreferences.getInt(PreferencesKey.currentNanoNodeIdKey);
     final nanoPowNodeId = sharedPreferences.getInt(PreferencesKey.currentNanoNodeIdKey);
+    final decredNodeId = sharedPreferences.getInt(PreferencesKey.currentDecredNodeIdKey);
     final moneroNode = nodeSource.get(nodeId);
     final bitcoinElectrumServer = nodeSource.get(bitcoinElectrumServerId);
     final litecoinElectrumServer = nodeSource.get(litecoinElectrumServerId);
@@ -1135,6 +1137,7 @@ abstract class SettingsStoreBase with Store {
     final polygonNode = nodeSource.get(polygonNodeId);
     final bitcoinCashNode = nodeSource.get(bitcoinCashElectrumServerId);
     final nanoNode = nodeSource.get(nanoNodeId);
+    final decredNode = nodeSource.get(decredNodeId);
 
     if (moneroNode != null) {
       nodes[WalletType.monero] = moneroNode;
@@ -1167,6 +1170,10 @@ abstract class SettingsStoreBase with Store {
     if (nanoNode != null) {
       nodes[WalletType.nano] = nanoNode;
     }
+
+    if (decredNode != null) {
+      nodes[WalletType.decred] = decredNode;
+    }
   }
 
   Future<void> _saveCurrentNode(Node node, WalletType walletType) async {
@@ -1197,6 +1204,9 @@ abstract class SettingsStoreBase with Store {
         break;
       case WalletType.polygon:
         await _sharedPreferences.setInt(PreferencesKey.currentPolygonNodeIdKey, node.key as int);
+        break;
+      case WalletType.decred:
+        await _sharedPreferences.setInt(PreferencesKey.currentDecredNodeIdKey, node.key as int);
         break;
       default:
         break;

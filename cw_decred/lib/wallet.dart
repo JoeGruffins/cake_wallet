@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:cw_core/transaction_direction.dart';
 import 'package:cw_decred/pending_transaction.dart';
@@ -38,6 +40,9 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
   // password is currently only used for seed display, but would likely also be
   // required to sign inputs when creating transactions.
   final String _password;
+  bool connecting = false;
+  String persistantPeer = "";
+  Timer? syncTimer;
 
   // TODO: Set up a way to change the balance and sync status when dcrlibwallet
   // changes. Long polling probably?
@@ -69,15 +74,112 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
     // and transactionHistory with data from libdcrwallet.
   }
 
+  void checkSync() {
+    final syncStatusJSON = libdcrwallet.syncStatus(walletInfo.name);
+    final decoded = json.decode(syncStatusJSON);
+
+    final syncStatusCode = decoded["syncstatuscode"] ?? 0;
+    final syncStatusStr = decoded["syncstatus"] ?? "";
+    final targetHeight = decoded["targetheight"] ?? 1;
+    final numPeers = decoded["numpeers"] ?? 0;
+    // final cFiltersHeight = decoded["cfiltersheight"] ?? 0;
+    final headersHeight = decoded["headersheight"] ?? 0;
+    final rescanHeight = decoded["rescanheight"] ?? 0;
+
+    if (numPeers == 0) {
+      syncStatus = NotConnectedSyncStatus();
+      return;
+    }
+
+    // Sync codes:
+	  // NotStarted = 0
+	  // FetchingCFilters = 1
+	  // FetchingHeaders = 2
+	  // DiscoveringAddrs = 3
+	  // Rescanning = 4
+	  // Complete = 5
+
+    if (syncStatusCode > 4) {
+      syncStatus = ConnectedSyncStatus();
+      return;
+    }
+
+    if (syncStatusCode == 1) {
+      syncStatus = SyncingSyncStatus(targetHeight,0.0);
+    }
+
+    if (syncStatusCode == 2) {
+      syncStatus = SyncingSyncStatus(targetHeight-headersHeight,headersHeight/targetHeight);
+    }
+
+    // TODO: This step takes a while so should really get more info to the UI
+    // that we are discovering addresses.
+    if (syncStatusCode == 3) {
+      syncStatus = SyncingSyncStatus(100,99);
+    }
+
+    if (syncStatusCode == 4) {
+      syncStatus = SyncingSyncStatus(targetHeight-rescanHeight,rescanHeight/targetHeight);
+    }
+  }
+
+  @action
   @override
   Future<void> connectToNode({required Node node}) async {
-    //throw UnimplementedError();
+    // Is this thread safe? Dart has no compare and swap?
+    if (connecting) {
+      throw "decred already connecting";
+    }
+    connecting = true;
+    String addr = "";
+    if (node.uri.host != "") {
+      addr = node.uri.host;
+      if (node.uri.port != "") {
+        addr += ":" + node.uri.port.toString();
+      }
+    }
+    if (addr != persistantPeer) {
+      if (syncTimer != null) {
+        syncTimer!.cancel();
+        syncTimer = null;
+      }
+      persistantPeer = addr;
+      libdcrwallet.closeWallet(walletInfo.name);
+      libdcrwallet.loadWalletSync({
+        "name": walletInfo.name,
+        "dataDir": walletInfo.dirPath,
+      });
+    }
+    await this._startSync();
+    connecting = false;
   }
 
   @action
   @override
   Future<void> startSync() async {
-    // TODO: call libdcrwallet.spvSync() and update syncStatus.
+    if (connecting) {
+      throw "decred already connecting";
+    }
+    connecting = true;
+    await this._startSync();
+    connecting = false;
+  }
+
+  Future<void> _startSync() async {
+    if (syncTimer != null) {
+      return;
+    }
+    try {
+      syncStatus = ConnectingSyncStatus();
+      libdcrwallet.startSyncAsync(
+        name: walletInfo.name,
+        peers: persistantPeer,
+      );
+      syncTimer = Timer.periodic(Duration(seconds: 5), (Timer t) => checkSync());
+    } catch (e) {
+      print(e.toString());
+      syncStatus = FailedSyncStatus();
+    }
   }
 
   @override

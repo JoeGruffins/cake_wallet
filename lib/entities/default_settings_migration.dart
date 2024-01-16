@@ -348,6 +348,13 @@ Node? getNanoDefaultNode({required Box<Node> nodes}) {
       nodes.values.firstWhereOrNull((node) => node.type == WalletType.nano);
 }
 
+Node? getDecredDefaultNode({required Box<Node> nodes}) {
+  final decredMainnetPort = ":9108";
+  final decredNode = Node(uri:decredMainnetPort);
+  decredNode.type = WalletType.decred;
+  return decredNode;
+}
+
 Node? getNanoDefaultPowNode({required Box<Node> nodes}) {
   return nodes.values.firstWhereOrNull((Node node) => node.uriRaw == nanoDefaultPowNodeUri) ??
       nodes.values.firstWhereOrNull((node) => (node.type == WalletType.nano));
@@ -589,6 +596,7 @@ Future<void> checkCurrentNodes(
   final currentPolygonNodeId = sharedPreferences.getInt(PreferencesKey.currentPolygonNodeIdKey);
   final currentNanoNodeId = sharedPreferences.getInt(PreferencesKey.currentNanoNodeIdKey);
   final currentNanoPowNodeId = sharedPreferences.getInt(PreferencesKey.currentNanoPowNodeIdKey);
+  final currentDecredNodeId = sharedPreferences.getInt(PreferencesKey.currentDecredNodeIdKey);
   final currentBitcoinCashNodeId =
       sharedPreferences.getInt(PreferencesKey.currentBitcoinCashNodeIdKey);
   final currentMoneroNode =
@@ -605,6 +613,8 @@ Future<void> checkCurrentNodes(
       nodeSource.values.firstWhereOrNull((node) => node.key == currentPolygonNodeId);
   final currentNanoNodeServer =
       nodeSource.values.firstWhereOrNull((node) => node.key == currentNanoNodeId);
+  final currentDecredNodeServer =
+      nodeSource.values.firstWhereOrNull((node) => node.key == currentDecredNodeId);
   final currentNanoPowNodeServer =
       powNodeSource.values.firstWhereOrNull((node) => node.key == currentNanoPowNodeId);
   final currentBitcoinCashNodeServer =
@@ -667,6 +677,13 @@ Future<void> checkCurrentNodes(
     final node = Node(uri: polygonDefaultNodeUri, type: WalletType.polygon);
     await nodeSource.add(node);
     await sharedPreferences.setInt(PreferencesKey.currentPolygonNodeIdKey, node.key as int);
+  }
+
+  if (currentDecredNodeServer == null) {
+    final decredMainnetPort = ":9108";
+    final node = Node(uri:decredMainnetPort , type: WalletType.decred);
+    await nodeSource.add(node);
+    await sharedPreferences.setInt(PreferencesKey.currentDecredNodeIdKey, node.key as int);
   }
 }
 

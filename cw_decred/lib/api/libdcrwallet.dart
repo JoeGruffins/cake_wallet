@@ -44,7 +44,7 @@ void createWalletSync(Map<String, String> args) {
   final name = args["name"]!.toCString();
   final dataDir = args["dataDir"]!.toCString();
   final password = args["password"]!.toCString();
-  final network = "testnet".toCString();
+  final network = "simnet".toCString();
 
   final res = payloadAndPointers(
     fn: () => dcrwalletApi.createWallet(name, dataDir, network, password),
@@ -66,7 +66,7 @@ Future<void> loadWalletAsync({required String name, required String dataDir}) {
 void loadWalletSync(Map<String, String> args) {
   final name = args["name"]!.toCString();
   final dataDir = args["dataDir"]!.toCString();
-  final network = "testnet".toCString();
+  final network = "simnet".toCString();
   final res = payloadAndPointers(
     fn: () => dcrwalletApi.loadWallet(name, dataDir, network),
     ptrsToFree: [name, dataDir, network],
@@ -74,8 +74,32 @@ void loadWalletSync(Map<String, String> args) {
   checkErr(res.err);
 }
 
+Future<void> startSyncAsync({required String name, required String peers}) {
+  final args = <String, String>{
+    "name": name,
+    "peers": peers,
+  };
+  return compute(startSync, args);
+}
+
+void startSync(Map<String, String> args) {
+  final name = args["name"]!.toCString();
+  final peers = args["peers"]!.toCString();
+  final res = payloadAndPointers(
+    fn: () => dcrwalletApi.syncWallet(name, peers),
+    ptrsToFree: [name, peers],
+  );
+  checkErr(res.err);
+}
+
+
 void closeWallet(String walletName) {
-  // TODO.
+  final name = walletName.toCString();
+  final res = payloadAndPointers(
+    fn: () => dcrwalletApi.closeWallet(name),
+    ptrsToFree: [name],
+  );
+  checkErr(res.err);
 }
 
 Future<void> changeWalletPassword(
@@ -106,6 +130,16 @@ String? currentReceiveAddress(String walletName) {
     // nothing.
     return null;
   }
+  checkErr(res.err);
+  return res.payload;
+}
+
+String syncStatus(String walletName) {
+  final cName = walletName.toCString();
+  final res = payloadAndPointers(
+    fn: () => dcrwalletApi.syncWalletStatus(cName),
+    ptrsToFree: [cName],
+  );
   checkErr(res.err);
   return res.payload;
 }

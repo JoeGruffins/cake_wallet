@@ -263,8 +263,14 @@ class Node extends HiveObject with Keyable {
       return false;
     }
   }
-}
 
   Future<bool> requestDecredNode() async {
-    return true;
+  try {
+    final socket = await Socket.connect(uri.host, uri.port, timeout: Duration(seconds: 5));
+      socket.destroy();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 }
