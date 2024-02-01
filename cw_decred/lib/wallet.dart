@@ -44,8 +44,6 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
   String persistantPeer = "";
   Timer? syncTimer;
 
-  // TODO: Set up a way to change the balance and sync status when dcrlibwallet
-  // changes. Long polling probably?
   @override
   @observable
   SyncStatus syncStatus;
@@ -69,12 +67,18 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
   }
 
   Future<void> init() async {
-    updateBalance();
-    // TODO: update other wallet properties such as syncStatus, walletAddresses
-    // and transactionHistory with data from libdcrwallet.
+    // Balance and other variables are updated periodically after sync is
+    // completed.
   }
 
-  void checkSync() {
+  void performBackgroundTasks() {
+    if (!checkSync()) {
+      return;
+    }
+    updateBalance();
+  }
+
+  bool checkSync() {
     final syncStatusJSON = libdcrwallet.syncStatus(walletInfo.name);
     final decoded = json.decode(syncStatusJSON);
 
@@ -88,7 +92,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
 
     if (numPeers == 0) {
       syncStatus = NotConnectedSyncStatus();
-      return;
+      return false;
     }
 
     // Sync codes:
@@ -101,26 +105,31 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
 
     if (syncStatusCode > 4) {
       syncStatus = ConnectedSyncStatus();
-      return;
+      return true;
     }
 
     if (syncStatusCode == 1) {
       syncStatus = SyncingSyncStatus(targetHeight,0.0);
+      return false;
     }
 
     if (syncStatusCode == 2) {
       syncStatus = SyncingSyncStatus(targetHeight-headersHeight,headersHeight/targetHeight);
+      return false;
     }
 
     // TODO: This step takes a while so should really get more info to the UI
     // that we are discovering addresses.
     if (syncStatusCode == 3) {
       syncStatus = SyncingSyncStatus(100,99);
+      return false;
     }
 
     if (syncStatusCode == 4) {
       syncStatus = SyncingSyncStatus(targetHeight-rescanHeight,rescanHeight/targetHeight);
+      return false;
     }
+    return false;
   }
 
   @action
@@ -175,7 +184,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
         name: walletInfo.name,
         peers: persistantPeer,
       );
-      syncTimer = Timer.periodic(Duration(seconds: 5), (Timer t) => checkSync());
+      syncTimer = Timer.periodic(Duration(seconds: 5), (Timer t) => performBackgroundTasks());
     } catch (e) {
       print(e.toString());
       syncStatus = FailedSyncStatus();
@@ -248,9 +257,11 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
   @override
   Future<void>? updateBalance() async {
     final balanceMap = libdcrwallet.balance(walletInfo.name);
+    final confirmed = balanceMap["confirmed"] ?? 0;
+    final unconfirmed = balanceMap["unconfirmed"] ?? 0;
     balance[CryptoCurrency.dcr] = DecredBalance(
-      confirmed: balanceMap["confirmed"] ?? 0,
-      unconfirmed: balanceMap["unconfirmed"] ?? 0,
+      confirmed: confirmed * 100000000,
+      unconfirmed: unconfirmed * 100000000,
     );
   }
 
