@@ -51,6 +51,9 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
   final String _password;
   final idPrefix = "decred_";
   bool connecting = false;
+  bool checkBalance = false;
+  int bestHeight = 0;
+  String bestHash = "";
   String persistantPeer = "";
   FeeCache feeRateFast = FeeCache(defaultFeeRate);
   FeeCache feeRateMedium = FeeCache(defaultFeeRate);
@@ -84,11 +87,40 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
     updateBalance();
   }
 
-  void performBackgroundTasks() {
+  void performBackgroundTasks() async {
     if (!checkSync()) {
       return;
     }
+    var checkTxs = this.checkBalance;
+    if (!checkTxs) {
+      final res = libdcrwallet.bestBlock(walletInfo.name);
+      final decoded = json.decode(res);
+      final hash = decoded["hash"] ?? "";
+      if (this.bestHash != hash) {
+        this.bestHash = hash;
+        this.bestHeight = decoded["height"] ?? "";
+        checkTxs = true;
+      }
+    }
+    if (!checkTxs) {
+      return;
+    }
+    this.checkBalance = false;
     updateBalance();
+    var from = 0;
+    while (true) {
+      // Transactions are returned from newest to oldest. Loop fetching 5 txn
+      // at a time until we find a batch with txn that no longer need to be
+      // updated.
+      final txs = await this.fetchFiveTransactions(from);
+      if (txs.length == 0) {
+        return;
+      }
+      if (this.transactionHistory.update(txs)) {
+        return;
+      }
+      from += 5;
+    }
   }
 
   bool checkSync() {
@@ -258,6 +290,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
     final decoded = json.decode(res);
     final signedHex = decoded["signedhex"];
     final send = () async {
+      this.checkBalance = true;
       libdcrwallet.sendRawTransaction(walletInfo.name, signedHex);
     };
     return DecredPendingTransaction(
@@ -335,21 +368,42 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
 
   @override
   Future<Map<String, DecredTransactionInfo>> fetchTransactions() async {
-    // TODO: Read from libdcrwallet.
-    final txInfo = DecredTransactionInfo(
-      id: "3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02",
-      amount: 1234567,
-      fee: 123,
-      direction: TransactionDirection.outgoing,
-      isPending: true,
-      date: DateTime.now(),
-      height: 0,
-      confirmations: 0,
-      to: "DsT4qJPPaYEuQRimfgvSKxKH3paysn1x3Nt",
-    );
-    return {
-      "3cbf3eb9523fd04e96dbaf98cdbd21779222cc8855ece8700494662ae7578e02": txInfo
-    };
+    return this.fetchFiveTransactions(0);
+  }
+
+  @override
+  Future<Map<String, DecredTransactionInfo>> fetchFiveTransactions(
+      int from) async {
+    final res =
+        libdcrwallet.listTransactions(walletInfo.name, from.toString(), "5");
+    final decoded = json.decode(res);
+    var txs = <String, DecredTransactionInfo>{};
+    for (final d in decoded) {
+      final txid = d["txid"] ?? "";
+      var direction = TransactionDirection.outgoing;
+      if (d["category"] == "receive") {
+        direction = TransactionDirection.incoming;
+      }
+      final amountDouble = d["amount"] ?? 0.0;
+      final amount = (amountDouble * 1e8).toInt().abs();
+      final feeDouble = d["fee"] ?? 0.0;
+      final fee = (feeDouble * 1e8).toInt().abs();
+      final confs = d["confirmations"] ?? 0;
+      final sendTime = d["time"] ?? 0;
+      final txInfo = DecredTransactionInfo(
+        id: txid,
+        amount: amount,
+        fee: fee,
+        direction: direction,
+        isPending: confs == 0,
+        date: DateTime.fromMillisecondsSinceEpoch(sendTime * 1000, isUtc: true),
+        height: 0,
+        confirmations: confs,
+        to: d["address"] ?? "",
+      );
+      txs[txid] = txInfo;
+    }
+    return txs;
   }
 
   @override
