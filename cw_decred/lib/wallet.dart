@@ -411,7 +411,10 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
 
   @override
   Future<void> rescan({required int height}) async {
-    // TODO.
+    if (height > this.bestHeight) {
+      return;
+    }
+    libdcrwallet.rescanFromHeight(walletInfo.name, height.toString());
   }
 
   @override
