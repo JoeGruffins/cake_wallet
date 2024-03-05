@@ -216,3 +216,16 @@ String rescanFromHeight(String walletName, String height) {
   );
   return res.payload;
 }
+
+String signMessage(
+    String walletName, String message, String address, String walletPassword) {
+  final cName = walletName.toCString();
+  final cMessage = message.toCString();
+  final cAddress = address.toCString();
+  final cPass = walletPassword.toCString();
+  final res = executePayloadFn(
+    fn: () => dcrwalletApi.signMessage(cName, cMessage, cAddress, cPass),
+    ptrsToFree: [cName, cMessage, cAddress, cPass],
+  );
+  return res.payload;
+}
