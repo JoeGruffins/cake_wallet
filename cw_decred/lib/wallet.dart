@@ -79,7 +79,6 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
 
   @override
   Object get keys {
-    // throw UnimplementedError();
     return {};
   }
 

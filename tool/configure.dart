@@ -1014,6 +1014,7 @@ import 'package:cw_decred/wallet_service.dart';
 import 'package:cw_decred/wallet_creation_credentials.dart';
 import 'package:cw_decred/amount_format.dart';
 import 'package:cw_decred/transaction_credentials.dart';
+import 'package:cw_decred/mnemonic.dart';
 """;
   const decredCwPart = "part 'cw_decred.dart';";
   const decredContent = """
@@ -1050,6 +1051,8 @@ abstract class Decred {
   void updateUnspents(Object wallet);
 
   int heightByDate(DateTime date);
+
+  List<String> getDecredWordList();
 }
 """;
 
