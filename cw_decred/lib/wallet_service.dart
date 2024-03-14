@@ -14,11 +14,13 @@ import 'package:cw_core/unspent_coins_info.dart';
 class DecredWalletService extends WalletService<
     DecredNewWalletCredentials,
     DecredRestoreWalletFromSeedCredentials,
-    DecredRestoreWalletFromWIFCredentials> {
+    DecredRestoreWalletFromPubkeyCredentials> {
   DecredWalletService(this.walletInfoSource, this.unspentCoinsInfoSource);
 
   final Box<WalletInfo> walletInfoSource;
   final Box<UnspentCoinsInfo> unspentCoinsInfoSource;
+  final seedRestorePath = "m/44'/42'";
+  static final pubkeyRestorePath = "m/44'/42'/0'";
 
   static void init() async {
     // Use the general path for all dcr wallets as the general log directory.
@@ -42,6 +44,7 @@ class DecredWalletService extends WalletService<
       dataDir: credentials.walletInfo!.dirPath,
       password: credentials.password!,
     );
+    credentials.walletInfo!.derivationPath = seedRestorePath;
     final wallet = DecredWallet(credentials.walletInfo!, credentials.password!,
         this.unspentCoinsInfoSource);
     await wallet.init();
@@ -100,15 +103,28 @@ class DecredWalletService extends WalletService<
       password: credentials.password!,
       mnemonic: credentials.mnemonic,
     );
+    credentials.walletInfo!.derivationPath = seedRestorePath;
     final wallet = DecredWallet(credentials.walletInfo!, credentials.password!,
         this.unspentCoinsInfoSource);
     await wallet.init();
     return wallet;
   }
 
+  // restoreFromKeys only supports restoring a watch only wallet from an account
+  // pubkey.
   @override
   Future<DecredWallet> restoreFromKeys(
-          DecredRestoreWalletFromWIFCredentials credentials,
-          {bool? isTestnet}) async =>
-      throw UnimplementedError();
+      DecredRestoreWalletFromPubkeyCredentials credentials,
+      {bool? isTestnet}) async {
+    createWatchOnlyWallet(
+      credentials.walletInfo!.name,
+      credentials.walletInfo!.dirPath,
+      credentials.pubkey,
+    );
+    credentials.walletInfo!.derivationPath = pubkeyRestorePath;
+    final wallet = DecredWallet(credentials.walletInfo!, credentials.password!,
+        this.unspentCoinsInfoSource);
+    await wallet.init();
+    return wallet;
+  }
 }

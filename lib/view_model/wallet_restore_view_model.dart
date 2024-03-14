@@ -48,6 +48,7 @@ abstract class WalletRestoreViewModelBase extends WalletCreationVM with Store {
       case WalletType.nano:
       case WalletType.banano:
       case WalletType.solana:
+      case WalletType.decred:
         availableModes = [WalletRestoreMode.seed, WalletRestoreMode.keys];
         break;
       default:
@@ -182,6 +183,13 @@ abstract class WalletRestoreViewModelBase extends WalletCreationVM with Store {
             name: name,
             password: password,
             privateKey: options['private_key'] as String,
+          );
+
+        case WalletType.decred:
+          return decred!.createDecredRestoreWalletFromPubkeyCredentials(
+            name: name,
+            password: password,
+            pubkey: viewKey!,
           );
         default:
           break;
