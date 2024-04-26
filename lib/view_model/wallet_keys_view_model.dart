@@ -9,7 +9,7 @@ import 'package:cw_core/wallet_base.dart';
 import 'package:cake_wallet/src/screens/transaction_details/standart_list_item.dart';
 import 'package:cake_wallet/monero/monero.dart';
 import 'package:cake_wallet/haven/haven.dart';
-import 'package:cw_monero/api/wallet.dart' as monero_wallet;
+// import 'package:cw_monero/api/wallet.dart' as monero_wallet;
 import 'package:cake_wallet/decred/decred.dart';
 import 'package:polyseed/polyseed.dart';
 
@@ -151,7 +151,7 @@ abstract class WalletKeysViewModelBase with Store {
       return await haven!.getCurrentHeight();
     }
     if (_appStore.wallet!.type == WalletType.monero) {
-      return monero_wallet.getCurrentHeight();
+      // return monero_wallet.getCurrentHeight();
     }
     return null;
   }
