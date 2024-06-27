@@ -26,7 +26,7 @@ import 'package:cw_core/amount_converter.dart';
 import 'package:cw_core/currency.dart';
 import 'package:cw_core/wallet_info.dart';
 import 'package:cw_core/wallet_type.dart';
-import 'package:cw_monero/api/wallet.dart';
+// import 'package:cw_monero/api/wallet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
