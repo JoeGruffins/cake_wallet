@@ -253,7 +253,7 @@ abstract class DecredWalletBase
       final config = {
         "name": walletInfo.name,
         "datadir": walletInfo.dirPath,
-        "net": network,
+        "net": "simnet",
         "unsyncedaddrs": true,
       };
       libdcrwallet.loadWalletSync(jsonEncode(config));

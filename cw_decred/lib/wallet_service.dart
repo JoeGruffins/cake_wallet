@@ -48,7 +48,7 @@ class DecredWalletService extends WalletService<
       "name": credentials.walletInfo!.name,
       "datadir": credentials.walletInfo!.dirPath,
       "pass": credentials.password!,
-      "net": isTestnet == true ? testnet : mainnet,
+      "net": "simnet",
       "unsyncedaddrs": true,
     };
     await createWalletAsync(jsonEncode(config));
@@ -78,7 +78,7 @@ class DecredWalletService extends WalletService<
     final config = {
       "name": walletInfo.name,
       "datadir": walletInfo.dirPath,
-      "net": network,
+      "net": "simnet",
       "unsyncedaddrs": true,
     };
     await loadWalletAsync(jsonEncode(config));
@@ -125,7 +125,7 @@ class DecredWalletService extends WalletService<
       "datadir": credentials.walletInfo!.dirPath,
       "pass": credentials.password!,
       "mnemonic": credentials.mnemonic,
-      "net": isTestnet == true ? testnet : mainnet,
+      "net": "simnet",
       "unsyncedaddrs": true,
     };
     await createWalletAsync(jsonEncode(config));
@@ -147,7 +147,7 @@ class DecredWalletService extends WalletService<
       "name": credentials.walletInfo!.name,
       "datadir": credentials.walletInfo!.dirPath,
       "pubkey": credentials.pubkey,
-      "net": isTestnet == true ? testnet : mainnet,
+      "net": "simnet",
       "unsyncedaddrs": true,
     };
     createWatchOnlyWallet(jsonEncode(config));
