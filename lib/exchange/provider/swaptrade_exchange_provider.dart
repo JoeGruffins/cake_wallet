@@ -36,7 +36,7 @@ class SwapTradeExchangeProvider extends ExchangeProvider {
         .toList())
   ];
 
-  static final markup = secrets.swapTradeExchangeMarkup;
+  static final markup = "";
 
   static const apiAuthority = 'api.swaptrade.io';
   static const getRate = '/api/swap/get-rate';
