@@ -38,7 +38,7 @@ fi
 
 export NDK_BIN_PATH="${ANDROID_HOME}/ndk/${ANDROID_NDK_VERSION}/toolchains/llvm/prebuilt/$(uname | tr '[:upper:]' '[:lower:]')-x86_64/bin"
 export ANDROID_API_VERSION=21
-# export CPATH="$(clang -v 2>&1 | grep "Selected GCC installation" | rev | cut -d' ' -f1 | rev)/include"
+export CPATH="$(clang -v 2>&1 | grep "Selected GCC installation" | rev | cut -d' ' -f1 | rev)/include"
 
 for arch in "aarch" "aarch64" "x86_64"
 do

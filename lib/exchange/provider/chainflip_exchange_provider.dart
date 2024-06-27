@@ -40,7 +40,8 @@ class ChainflipExchangeProvider extends ExchangeProvider {
   static const _quotePath = '/quotes-native';
   static const _swapPath = '/swap';
   static const _txInfoPath = '/status-by-deposit-channel';
-  static const _affiliateBps = secrets.chainflipAffiliateFee;
+  // static const _affiliateBps = secrets.chainflipAffiliateFee;
+  static const _affiliateBps = "";
   static const _affiliateKey = secrets.chainflipApiKey;
 
   final Box<Trade> tradesStore;
