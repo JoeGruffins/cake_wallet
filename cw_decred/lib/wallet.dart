@@ -337,7 +337,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
         return defaultFeeRate;
       }
     };
-    final p = priority as DecredTransactionPriority;
+    final p = priority;
     switch (p) {
       case DecredTransactionPriority.slow:
         if (feeRateSlow.isOld()) {
@@ -388,7 +388,6 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
     return this.fetchFiveTransactions(0);
   }
 
-  @override
   Future<Map<String, DecredTransactionInfo>> fetchFiveTransactions(
       int from) async {
     final res =
@@ -407,6 +406,7 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
       final fee = (feeDouble * 1e8).toInt().abs();
       final confs = d["confirmations"] ?? 0;
       final sendTime = d["time"] ?? 0;
+      final to = d["address"] ?? "";
       final txInfo = DecredTransactionInfo(
         id: txid,
         amount: amount,
@@ -416,8 +416,32 @@ abstract class DecredWalletBase extends WalletBase<DecredBalance,
         date: DateTime.fromMillisecondsSinceEpoch(sendTime * 1000, isUtc: true),
         height: 0,
         confirmations: confs,
-        to: d["address"] ?? "",
+        to: to,
+        outputAddresses: [to],
       );
+
+      // Outputs/Transactions will have the same txid if they are sent as part
+      // of the same tx. Ensure we account for all transactions/outputs with the
+      // same txid.
+
+      // NOTE: We are only fetching 5 transactions from
+      // libdcrwallet.listTransactions and we could run into issues where the
+      // wrong tx amount is reported if a user creates a send transaction that
+      // spends to more than 5 output, i.e we fetch the first 2, 3 or 4 as part
+      // of an initial request and account for outputs that have the same txid
+      // below but when a second request is made, the last transaction might
+      // overwrite the first batch of transactions or will be ignored since they
+      // share the same id. This has been handled in
+      // transaction_history.dart#L35-59 which is the only functional call site
+      // of this method as of writing.
+      if (txs.containsKey(txid)) {
+        final tx = txs[txid]!;
+        txInfo.amount += tx.amount;
+        if (!txInfo.outputAddresses!.contains(tx.to!)) {
+          txInfo.outputAddresses?.add(to);
+        }
+      }
+
       txs[txid] = txInfo;
     }
     return txs;

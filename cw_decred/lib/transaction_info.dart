@@ -15,6 +15,7 @@ class DecredTransactionInfo extends TransactionInfo {
     required int height,
     required int confirmations,
     required String to,
+    required List<String> outputAddresses,
   }) {
     this.id = id;
     this.amount = amount;
@@ -25,6 +26,7 @@ class DecredTransactionInfo extends TransactionInfo {
     this.isPending = isPending;
     this.confirmations = confirmations;
     this.to = to;
+    this.outputAddresses = outputAddresses;
   }
 
   String? _fiatAmount;
