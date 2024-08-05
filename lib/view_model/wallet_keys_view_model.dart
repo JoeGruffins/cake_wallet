@@ -9,8 +9,9 @@ import 'package:cw_core/transaction_direction.dart';
 import 'package:cw_core/transaction_info.dart';
 import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/wallet_type.dart';
-import 'package:cw_monero/monero_wallet.dart';
+//import 'package:cw_monero/monero_wallet.dart';
 import 'package:mobx/mobx.dart';
+import 'package:cake_wallet/decred/decred.dart';
 import 'package:polyseed/polyseed.dart';
 
 part 'wallet_keys_view_model.g.dart';
@@ -21,7 +22,8 @@ abstract class WalletKeysViewModelBase with Store {
   WalletKeysViewModelBase(this._appStore)
       : title = _appStore.wallet!.type == WalletType.bitcoin ||
                 _appStore.wallet!.type == WalletType.litecoin ||
-                _appStore.wallet!.type == WalletType.bitcoinCash
+                _appStore.wallet!.type == WalletType.bitcoinCash ||
+                _appStore.wallet!.type == WalletType.decred
             ? S.current.wallet_seed
             : S.current.wallet_keys,
         _restoreHeight = _appStore.wallet!.walletInfo.restoreHeight,
@@ -87,14 +89,14 @@ abstract class WalletKeysViewModelBase with Store {
             title: S.current.wallet_seed, value: _appStore.wallet!.seed!),
       ]);
 
-      if (_appStore.wallet?.seed != null &&
-          Polyseed.isValidSeed(_appStore.wallet!.seed!)) {
-        final lang = PolyseedLang.getByPhrase(_appStore.wallet!.seed!);
-        items.add(StandartListItem(
-            title: S.current.wallet_seed_legacy,
-            value: (_appStore.wallet as MoneroWalletBase)
-                .seedLegacy(lang.nameEnglish)));
-      }
+      //if (_appStore.wallet?.seed != null &&
+      //    Polyseed.isValidSeed(_appStore.wallet!.seed!)) {
+      //  final lang = PolyseedLang.getByPhrase(_appStore.wallet!.seed!);
+      //  items.add(StandartListItem(
+      //      title: S.current.wallet_seed_legacy,
+      //      value: (_appStore.wallet as MoneroWalletBase)
+      //          .seedLegacy(lang.nameEnglish)));
+      //}
 
       final restoreHeight = monero!.getRestoreHeight(_appStore.wallet!);
       if (restoreHeight != null) {
@@ -102,6 +104,16 @@ abstract class WalletKeysViewModelBase with Store {
             title: S.current.wallet_recovery_height,
             value: restoreHeight.toString()));
       }
+    }
+
+    if (_appStore.wallet!.type == WalletType.decred) {
+      final seed = _appStore.wallet!.seed;
+      final pubkey = decred!.pubkey(_appStore.wallet!);
+      items.addAll([
+        if (seed != null)
+          StandartListItem(title: S.current.wallet_seed, value: seed),
+        StandartListItem(title: S.current.view_key_public, value: pubkey),
+      ]);
     }
 
     if (_appStore.wallet!.type == WalletType.haven) {
@@ -217,7 +229,7 @@ abstract class WalletKeysViewModelBase with Store {
       return await haven!.getCurrentHeight();
     }
     if (_appStore.wallet!.type == WalletType.monero) {
-      return await monero!.getCurrentHeight();
+      // return await monero!.getCurrentHeight();
     }
     if (_appStore.wallet!.type == WalletType.wownero) {
       return await wownero!.getCurrentHeight();
@@ -251,6 +263,8 @@ abstract class WalletKeysViewModelBase with Store {
         return 'tron-wallet';
       case WalletType.wownero:
         return 'wownero-wallet';
+      case WalletType.decred:
+        return 'decred-wallet';
       default:
         throw Exception('Unexpected wallet type: ${_appStore.wallet!.type.toString()}');
     }

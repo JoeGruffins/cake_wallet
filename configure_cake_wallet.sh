@@ -27,9 +27,41 @@ if [ "$PLATFORM" == "$ANDROID" ]; then
     cd scripts/android
 fi
 
+echo "============================ BUILDING DEPS ============================"
+
 source ./app_env.sh cakewallet
 ./app_config.sh
+./build_decred.sh
+
+if [ "$PLATFORM" == "$MACOS" ]; then
+   ./gen.sh
+fi
+
+echo "=================== generate secrets, localization ===================="
+
 cd ../.. && flutter pub get
-#flutter packages pub run tool/generate_localization.dart
+flutter packages pub run tool/generate_localization.dart # If this fails, add --force flag to the command
+
+# NOTE: You only need to do this the first time you are trying to run the app.
+# If you have done it before and have created a wallet after then, please skip.
+# Else, you'll not be able to login that wallet again and will have to create a
+# new wallet. If the command below fails, add --force flag and try again.
+
+# flutter packages pub run tool/generate_new_secrets.dart 
+
+
+echo "================================ MBOX ================================="
+
 ./model_generator.sh
-#cd macos && pod install
+
+if [ "$PLATFORM" == "$IOS" ] || [ "$PLATFORM" == "$MACOS"  ]; then
+    cd $PLATFORM && pod install
+fi
+
+echo "
+============================ ALL DONE. NEXT STEPS: ====================
+=                                                                     =
+= UPDATE TEAM AND BUNDLE IDENTIFIER IN XCODE > SIGNING & CAPABILITIES =
+=                                                                     =
+=======================================================================
+"

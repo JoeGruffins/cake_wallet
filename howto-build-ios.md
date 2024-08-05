@@ -72,6 +72,10 @@ Build the Monero libraries and their dependencies:
 
 `$ ./build_monero_all.sh`
 
+Build the Decred library:
+
+`$ ./build_decred.sh`
+
 It is now time to change back to the base directory of the CakeWallet source code:
 
 `$ cd ../../`
@@ -84,9 +88,22 @@ Your CakeWallet binary will be built with cryptographic salts, which are used fo
 
 `$ flutter packages pub run tool/generate_new_secrets.dart`
 
-Then we need to generate localization files and mobx models.
+Your CakeWallet binary will be built with cryptographic salts, which are used for secure encryption of your data. You may generate these secret salts with the following command:
 
-`$ ./configure_cake_wallet.sh ios`
+`$ flutter packages pub run tool/generate_new_secrets.dart`
+
+If the command above fails, add `--force` flag and run it again.
+
+*Note*: You should skip this step if you've already done this once. Else, you
+will not be able to log into your existing wallet with the new secrets.
+
+Then we need to generate localization files. If this command fails, add `--force` flag and run it again.
+
+`$ flutter packages pub run tool/generate_localization.dart`
+
+Finally build mobx models for the app:
+
+`$ ./model_generator.sh`
 
 ### 7. Build!
 

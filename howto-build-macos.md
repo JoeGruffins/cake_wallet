@@ -83,6 +83,11 @@ If you be needed to build universal monero lib, then it will require additional 
 
 If you will be needed to build monero wallet lib only for x86_64 on arm64 mac, then you need use steps above, but run build script with rosetta without arguments: `$ arch -x86_64 ./build_monero_all.sh`.
 
+Build the Decred library:
+
+`$ ./build_decred.sh`
+`$ ./gen.sh`
+
 It is now time to change back to the base directory of the CakeWallet source code:
 
 `$ cd ../../`
@@ -95,9 +100,18 @@ Your CakeWallet binary will be built with cryptographic salts, which are used fo
 
 `$ flutter packages pub run tool/generate_new_secrets.dart`
 
-Then we need to generate localization files and mobx models.
+If the command above fails, add `--force` flag and run it again.
 
-`$ ./configure_cake_wallet.sh macos`
+*Note*: You should skip this step if you've already done this once. Else, you
+will not be able to log into your existing wallet with the new secrets.
+
+Then we need to generate localization files. If this command fails, add `--force` flag and run it again.
+
+`$ flutter packages pub run tool/generate_localization.dart`
+
+Finally build mobx models for the app:
+
+`$ ./model_generator.sh`
 
 ### 7. Build!
 
