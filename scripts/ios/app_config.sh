@@ -27,18 +27,15 @@ sed -i '' "s/\${PRODUCT_BUNDLE_IDENTIFIER}/${APP_IOS_BUNDLE_ID}/g" ./ios/Runner.
 CONFIG_ARGS=""
 
 case $APP_IOS_TYPE in
-        $MONERO_COM)
+    $MONERO_COM)
 		CONFIG_ARGS="--monero"
 		;;
+
         $CAKEWALLET)
-		CONFIG_ARGS="--monero --bitcoin --ethereum --polygon --nano --bitcoinCash --solana --tron --wownero"
-		if [ "$CW_WITH_HAVEN" = true ];then
-		    CONFIG_ARGS="$CONFIG_ARGS --haven"
-		fi
+		CONFIG_ARGS="--bitcoin --decred" #--haven
 		;;
+
 	$HAVEN)
-
-
 		CONFIG_ARGS="--haven"
 		;;
 esac
