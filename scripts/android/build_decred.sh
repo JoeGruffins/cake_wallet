@@ -3,16 +3,18 @@
 . ./config.sh
 CW_DECRED_DIR=${WORKDIR}/cake_wallet/cw_decred
 LIBWALLET_PATH="${WORKDIR}/decred/libwallet"
-LIBWALLET_URL="https://github.com/decred/libwallet.git"
+#LIBWALLET_URL="https://github.com/decred/libwallet.git"
+LIBWALLET_DIR="/home/joe/git/libwallet/"
 LIBWALLET_VERSION="v1.1.0"
 
-if [ -e $LIBWALLET_PATH ]; then
-       rm -fr $LIBWALLET_PATH
-fi
-mkdir -p $LIBWALLET_PATH
-git clone $LIBWALLET_URL $LIBWALLET_PATH
-cd $LIBWALLET_PATH
-git checkout $LIBWALLET_VERSION
+#if [ -e $LIBWALLET_PATH ]; then
+#       rm -fr $LIBWALLET_PATH
+#fi
+#mkdir -p $LIBWALLET_PATH
+#git clone $LIBWALLET_URL $LIBWALLET_PATH
+#cd $LIBWALLET_PATH
+#git checkout $LIBWALLET_VERSION
+cd $LIBWALLET_DIR
 
 export CPATH="$(clang -v 2>&1 | grep "Selected GCC installation" | rev | cut -d' ' -f1 | rev)/include"
 
@@ -47,11 +49,13 @@ go build -buildmode=c-shared -o ./build/libdcrwallet.so ./cgo
 
 DEST_LIB_DIR=${CW_DECRED_DIR}/android/libs/${ARCH_ABI}
 mkdir -p $DEST_LIB_DIR
-mv ${LIBWALLET_PATH}/build/libdcrwallet.so $DEST_LIB_DIR
+#mv ${LIBWALLET_PATH}/build/libdcrwallet.so $DEST_LIB_DIR
+mv ./build/libdcrwallet.so $DEST_LIB_DIR
 
 done
 
 HEADER_DIR=$CW_DECRED_DIR/lib/api
-mv ${LIBWALLET_PATH}/build/libdcrwallet.h $HEADER_DIR
+#mv ${LIBWALLET_PATH}/build/libdcrwallet.h $HEADER_DIR
+mv ./build/libdcrwallet.h $HEADER_DIR
 cd $CW_DECRED_DIR
 dart run ffigen
