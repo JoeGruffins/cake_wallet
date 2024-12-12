@@ -385,12 +385,7 @@ abstract class DashboardViewModelBase with Store {
   bool get isTestnet => wallet.type == WalletType.bitcoin && bitcoin!.isTestnet(wallet);
 
   @computed
-  bool get hasRescan =>
-      wallet.type == WalletType.bitcoin ||
-      wallet.type == WalletType.monero ||
-      wallet.type == WalletType.litecoin ||
-      wallet.type == WalletType.wownero ||
-      wallet.type == WalletType.haven;
+  bool get hasRescan => wallet.hasRescan;
 
   @computed
   bool get isMoneroViewOnly {
@@ -566,6 +561,7 @@ abstract class DashboardViewModelBase with Store {
       case WalletType.banano:
       case WalletType.tron:
       case WalletType.wownero:
+      case WalletType.decred:
         return true;
       case WalletType.haven:
       case WalletType.none:
