@@ -306,10 +306,12 @@ String defaultPubkey(String walletName) {
   return res.payload;
 }
 
-String addresses(String walletName) {
+String addresses(String walletName, String nUsed, String nUnused) {
   final cName = walletName.toCString();
+  final cNUsed = nUsed.toCString();
+  final cNUnused = nUnused.toCString();
   final res = executePayloadFn(
-    fn: () => dcrwalletApi.addresses(cName),
+    fn: () => dcrwalletApi.addresses(cName, cNUsed, cNUnused),
     ptrsToFree: [cName],
   );
   return res.payload;

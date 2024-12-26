@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cw_core/address_info.dart';
 import 'package:cw_core/wallet_addresses.dart';
 import 'package:cw_core/wallet_info.dart';
 import 'package:cw_decred/api/libdcrwallet.dart' as libdcrwallet;
@@ -11,11 +12,52 @@ class DecredWalletAddresses extends WalletAddresses {
 
   @override
   String get address {
+    // This will not return an address if the wallet is not synced.
     final cAddr = libdcrwallet.currentReceiveAddress(walletInfo.name) ?? '';
     if (cAddr != '') {
       currentAddr = cAddr;
     }
     return currentAddr;
+  }
+
+  @override
+  Future<void> init() async {
+    if (walletInfo.addresses != null) {
+      addressesMap = walletInfo.addresses!;
+    }
+    if (walletInfo.addressInfos != null) {
+      addressInfos = walletInfo.addressInfos!;
+    }
+    if (walletInfo.usedAddresses != null) {
+      usedAddresses = {...walletInfo.usedAddresses!};
+    }
+    await updateAddressesInBox();
+  }
+
+  @override
+  Future<void> updateAddressesInBox() async {
+    final addrs = libAddresses();
+    final allAddrs = new List.from(addrs.$1)..addAll(addrs.$2);
+
+    // Add all addresses.
+    allAddrs.forEach((addr) {
+      if (addressesMap.containsKey(addr)) {
+        return;
+      }
+      addressesMap[addr] = "";
+      addressInfos[0] ??= [];
+      addressInfos[0]
+          ?.add(AddressInfo(address: addr, label: "", accountIndex: 0));
+    });
+
+    // Add used addresses.
+    addrs.$1.forEach((addr) {
+      if (!usedAddresses.contains(addr)) {
+        usedAddresses.add(addr);
+      }
+    });
+
+    await saveAddressesInBox();
   }
 
   String generateNewAddress() {
@@ -26,21 +68,45 @@ class DecredWalletAddresses extends WalletAddresses {
     return nAddr;
   }
 
+  List<AddressInfo> getAddressInfos() {
+    if (addressInfos.containsKey(0)) {
+      return addressInfos[0]!;
+    }
+    return <AddressInfo>[];
+  }
+
   List<String> addresses() {
-    final res = libdcrwallet.addresses(walletInfo.name);
-    final addrs = (json.decode(res) as List<dynamic>).cast<String>();
+    final addrs = List<String>.from(usedAddresses);
+    for (final k in addressesMap.keys) {
+      addrs.add(k);
+    }
     return addrs;
+  }
+
+  Future<void> updateAddress(String address, String label) async {
+    if (!addressInfos.containsKey(0)) {
+      return;
+    }
+    addressInfos[0]!.forEach((info) {
+      if (info.address == address) {
+        info.label = label;
+      }
+    });
+    await saveAddressesInBox();
+  }
+
+  (List<String>, List<String>, int) libAddresses() {
+    final nUsed = "10";
+    final nUnused = "1";
+    final res = libdcrwallet.addresses(walletInfo.name, nUsed, nUnused);
+    final decoded = json.decode(res);
+    final usedAddrs = List<String>.from(decoded["used"]);
+    final unusedAddrs = List<String>.from(decoded["unused"]);
+    // index is the index of the first unused address.
+    final index = decoded["index"] ?? 0;
+    return (usedAddrs, unusedAddrs, index);
   }
 
   @override
   set address(String addr) {}
-
-  @override
-  Future<void> init() async {}
-
-  @override
-  Future<void> updateAddressesInBox() async {}
-
-  @override
-  Future<void> saveAddressesInBox() async {}
 }

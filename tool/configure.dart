@@ -1440,9 +1440,7 @@ abstract class Decred {
       required String mnemonic,
       required String password});
   WalletCredentials createDecredRestoreWalletFromPubkeyCredentials(
-      {required String name,
-      required String pubkey,
-      required String password});
+      {required String name, required String pubkey, required String password});
   WalletService createDecredWalletService(Box<WalletInfo> walletInfoSource,
       Box<UnspentCoinsInfo> unspentCoinSource);
 
@@ -1459,6 +1457,8 @@ abstract class Decred {
   List<String> getAddresses(Object wallet);
   String getAddress(Object wallet);
   Future<void> generateNewAddress(Object wallet);
+  List<AddressInfo> getAddressInfos(Object wallet);
+  Future<void> updateAddress(Object wallet, String address, String label);
 
   String formatterDecredAmountToString({required int amount});
   double formatterDecredAmountToDouble({required int amount});
