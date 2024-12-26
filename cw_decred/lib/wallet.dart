@@ -31,15 +31,19 @@ part 'wallet.g.dart';
 
 class DecredWallet = DecredWalletBase with _$DecredWallet;
 
-abstract class DecredWalletBase
-    extends WalletBase<DecredBalance, DecredTransactionHistory, DecredTransactionInfo> with Store {
-  DecredWalletBase(WalletInfo walletInfo, String password, Box<UnspentCoinsInfo> unspentCoinsInfo)
+abstract class DecredWalletBase extends WalletBase<DecredBalance,
+    DecredTransactionHistory, DecredTransactionInfo> with Store {
+  DecredWalletBase(WalletInfo walletInfo, String password,
+      Box<UnspentCoinsInfo> unspentCoinsInfo)
       : _password = password,
         this.syncStatus = NotConnectedSyncStatus(),
         this.unspentCoinsInfo = unspentCoinsInfo,
-        this.watchingOnly = walletInfo.derivationPath == DecredWalletService.pubkeyRestorePath ||
-            walletInfo.derivationPath == DecredWalletService.pubkeyRestorePathTestnet,
-        this.balance = ObservableMap.of({CryptoCurrency.dcr: DecredBalance.zero()}),
+        this.watchingOnly = walletInfo.derivationPath ==
+                DecredWalletService.pubkeyRestorePath ||
+            walletInfo.derivationPath ==
+                DecredWalletService.pubkeyRestorePathTestnet,
+        this.balance =
+            ObservableMap.of({CryptoCurrency.dcr: DecredBalance.zero()}),
         this.isTestnet = walletInfo.derivationPath ==
                 DecredWalletService.seedRestorePathTestnet ||
             walletInfo.derivationPath ==
@@ -52,10 +56,15 @@ abstract class DecredWalletBase
   // NOTE: Hitting this max fee would be unexpected with current on chain use
   // but this may need to be updated in the future.
   final maxFeeRate = 100000;
-  final syncInterval = 30; // seconds
+  // syncIntervalSyncing is used up until synced, then transactions are checked
+  // every syncIntervalSynced.
+  final syncIntervalSyncing = 5; // seconds
+  final syncIntervalSynced = 30; // seconds
   static final defaultFeeRate = 10000;
   final String _password;
   final idPrefix = "decred_";
+  // synced is used to set the syncTimer interval.
+  bool synced = false;
   bool watchingOnly;
   bool connecting = false;
   String persistantPeer = "";
@@ -96,16 +105,34 @@ abstract class DecredWalletBase
 
   Future<void> init() async {
     updateBalance();
+    this.walletAddresses.init();
   }
 
   void performBackgroundTasks() async {
     if (!checkSync()) {
+      if (synced == true) {
+        synced = false;
+        if (syncTimer != null) {
+          syncTimer!.cancel();
+        }
+        syncTimer = Timer.periodic(Duration(seconds: syncIntervalSyncing),
+            (Timer t) => performBackgroundTasks());
+      }
       return;
     }
-    // final res = libdcrwallet.bestBlock(walletInfo.name);
-    // final decoded = json.decode(res);
-    // final hash = decoded["hash"] ?? "";
     updateBalance();
+    walletAddresses.updateAddressesInBox();
+    // Set sync check interval lower since we are synced.
+    if (synced == false) {
+      synced = true;
+      if (syncTimer != null) {
+        syncTimer!.cancel();
+      }
+      syncTimer = Timer.periodic(Duration(seconds: syncIntervalSynced),
+          (Timer t) => performBackgroundTasks());
+    }
+    // from is the number of transactions skipped from most recent, not block
+    // height.
     var from = 0;
     while (true) {
       // Transactions are returned from newest to oldest. Loop fetching 5 txn
@@ -169,7 +196,8 @@ abstract class DecredWalletBase
     if (syncStatusCode == 2) {
       final headersProg = headersHeight / targetHeight;
       // Only allow headers progress to go up half way.
-      syncStatus = SyncingSyncStatus(targetHeight - headersHeight, headersProg / 2);
+      syncStatus =
+          SyncingSyncStatus(targetHeight - headersHeight, headersProg / 2);
       return false;
     }
 
@@ -184,7 +212,8 @@ abstract class DecredWalletBase
     if (syncStatusCode == 4) {
       // Start at 75%.
       final rescanProg = rescanHeight / targetHeight / 4;
-      syncStatus = SyncingSyncStatus(targetHeight - rescanHeight, .75 + rescanProg);
+      syncStatus =
+          SyncingSyncStatus(targetHeight - rescanHeight, .75 + rescanProg);
       return false;
     }
     return false;
@@ -243,8 +272,8 @@ abstract class DecredWalletBase
         name: walletInfo.name,
         peers: persistantPeer,
       );
-      syncTimer =
-          Timer.periodic(Duration(seconds: syncInterval), (Timer t) => performBackgroundTasks());
+      syncTimer = Timer.periodic(Duration(seconds: syncIntervalSyncing),
+          (Timer t) => performBackgroundTasks());
     } catch (e) {
       printV(e.toString());
       syncStatus = FailedSyncStatus();
@@ -282,7 +311,7 @@ abstract class DecredWalletBase
       totalAmt += amt;
       final o = {
         "address": out.isParsedAddress ? out.extractedAddress! : out.address,
-        "amount": amt,
+        "amount": amt
       };
       outputs.add(o);
     }
@@ -296,7 +325,8 @@ abstract class DecredWalletBase
       "feerate": creds.feeRate ?? defaultFeeRate,
       "password": _password,
     };
-    final res = libdcrwallet.createSignedTransaction(walletInfo.name, jsonEncode(signReq));
+    final res = libdcrwallet.createSignedTransaction(
+        walletInfo.name, jsonEncode(signReq));
     final decoded = json.decode(res);
     final signedHex = decoded["signedhex"];
     final send = () async {
@@ -364,12 +394,13 @@ abstract class DecredWalletBase
       // 254. prefix (41 bytes) + ValueIn (8 bytes) + BlockHeight (4 bytes) +
       // BlockIndex (4 bytes) + sig script var int (at least 1 byte)
       final TxInOverhead = 57;
-      final P2PKHInputSize =
-          TxInOverhead + 109; // TxInOverhead (57) + var int (1) + P2PKHSigScriptSize (108)
+      final P2PKHInputSize = TxInOverhead +
+          109; // TxInOverhead (57) + var int (1) + P2PKHSigScriptSize (108)
 
       // Estimate using a transaction consuming three inputs and paying to one
       // address with change.
-      return this.feeRate(priority) * (MsgTxOverhead + P2PKHInputSize * 3 + P2PKHOutputSize * 2);
+      return this.feeRate(priority) *
+          (MsgTxOverhead + P2PKHInputSize * 3 + P2PKHOutputSize * 2);
     }
     return 0;
   }
@@ -379,8 +410,10 @@ abstract class DecredWalletBase
     return this.fetchFiveTransactions(0);
   }
 
-  Future<Map<String, DecredTransactionInfo>> fetchFiveTransactions(int from) async {
-    final res = libdcrwallet.listTransactions(walletInfo.name, from.toString(), "5");
+  Future<Map<String, DecredTransactionInfo>> fetchFiveTransactions(
+      int from) async {
+    final res =
+        libdcrwallet.listTransactions(walletInfo.name, from.toString(), "5");
     final decoded = json.decode(res);
     var txs = <String, DecredTransactionInfo>{};
     for (final d in decoded) {
@@ -469,10 +502,12 @@ abstract class DecredWalletBase
   }
 
   @override
-  void setExceptionHandler(void Function(FlutterErrorDetails) onError) => onError;
+  void setExceptionHandler(void Function(FlutterErrorDetails) onError) =>
+      onError;
 
   Future<void> renameWalletFiles(String newWalletName) async {
-    final currentDirPath = await pathForWalletDir(name: walletInfo.name, type: type);
+    final currentDirPath =
+        await pathForWalletDir(name: walletInfo.name, type: type);
 
     final newDirPath = await pathForWalletDir(name: newWalletName, type: type);
 
@@ -491,12 +526,13 @@ abstract class DecredWalletBase
     }
     var addr = address;
     if (addr == null) {
-      addr = libdcrwallet.currentReceiveAddress(walletInfo.name);
+      addr = walletAddresses.address;
     }
     if (addr == null) {
       throw "unable to get an address from unsynced wallet";
     }
-    return libdcrwallet.signMessageAsync(walletInfo.name, message, addr, _password);
+    return libdcrwallet.signMessageAsync(
+        walletInfo.name, message, addr, _password);
   }
 
   List<Unspent> unspents() {
@@ -510,7 +546,8 @@ abstract class DecredWalletBase
       }
       final amountDouble = d["amount"] ?? 0.0;
       final amount = (amountDouble * 1e8).toInt().abs();
-      final utxo = Unspent(d["address"] ?? "", d["txid"] ?? "", amount, d["vout"] ?? 0, null);
+      final utxo = Unspent(
+          d["address"] ?? "", d["txid"] ?? "", amount, d["vout"] ?? 0, null);
       utxo.isChange = d["ischange"] ?? false;
       unspents.add(utxo);
     }
@@ -533,7 +570,9 @@ abstract class DecredWalletBase
     if (unspentCoins.isNotEmpty) {
       unspentCoins.forEach((coin) {
         final coinInfoList = this.unspentCoinsInfo.values.where((element) =>
-            element.walletId == walletID && element.hash == coin.hash && element.vout == coin.vout);
+            element.walletId == walletID &&
+            element.hash == coin.hash &&
+            element.vout == coin.vout);
 
         if (coinInfoList.isEmpty) {
           this.addCoinInfo(coin);
@@ -549,7 +588,8 @@ abstract class DecredWalletBase
 
     final List<dynamic> keys = <dynamic>[];
     this.unspentCoinsInfo.values.forEach((element) {
-      final existUnspentCoins = unspentCoins.where((coin) => element.hash.contains(coin.hash));
+      final existUnspentCoins =
+          unspentCoins.where((coin) => element.hash.contains(coin.hash));
 
       if (existUnspentCoins.isEmpty) {
         keys.add(element.key);
@@ -591,13 +631,15 @@ abstract class DecredWalletBase
     return decoded["height"] ?? 0;
   }
 
-  Future<bool> verifyMessage(String message, String signature, {String? address = null}) {
+  Future<bool> verifyMessage(String message, String signature,
+      {String? address = null}) {
     var addr = address;
     if (addr == null) {
       throw "an address is required to verify message";
     }
     return () async {
-      final verified = libdcrwallet.verifyMessage(walletInfo.name, message, addr, signature);
+      final verified =
+          libdcrwallet.verifyMessage(walletInfo.name, message, addr, signature);
       if (verified == "true") {
         return true;
       }
