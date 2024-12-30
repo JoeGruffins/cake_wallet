@@ -446,7 +446,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
-				DEVELOPMENT_TEAM = 32J6BB6VUS;
+				DEVELOPMENT_TEAM = SD32X4SEYW;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cake Wallet";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -456,6 +456,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12;
 				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.itswisdomagain.cakewalletmac;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -581,7 +582,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
-				DEVELOPMENT_TEAM = 32J6BB6VUS;
+				DEVELOPMENT_TEAM = SD32X4SEYW;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cake Wallet";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -591,6 +592,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12;
 				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.itswisdomagain.cakewalletmac;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -610,7 +612,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
-				DEVELOPMENT_TEAM = 32J6BB6VUS;
+				DEVELOPMENT_TEAM = SD32X4SEYW;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Cake Wallet";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -620,6 +622,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12;
 				MARKETING_VERSION = 1.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.itswisdomagain.cakewalletmac;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 			};
