@@ -80,12 +80,15 @@ class _AdvancedPrivacySettingsBody extends StatefulWidget {
   final Function(bool? val) toggleUseTestnet;
 
   @override
-  _AdvancedPrivacySettingsBodyState createState() => _AdvancedPrivacySettingsBodyState();
+  _AdvancedPrivacySettingsBodyState createState() =>
+      _AdvancedPrivacySettingsBodyState();
 }
 
-class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBody> {
+class _AdvancedPrivacySettingsBodyState
+    extends State<_AdvancedPrivacySettingsBody> {
   final TextEditingController passphraseController = TextEditingController();
-  final TextEditingController confirmPassphraseController = TextEditingController();
+  final TextEditingController confirmPassphraseController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _passphraseFormKey = GlobalKey<FormState>();
   bool? testnetValue;
@@ -95,7 +98,8 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
   @override
   void initState() {
     passphraseController.text = widget.seedTypeViewModel.passphrase ?? '';
-    confirmPassphraseController.text = widget.seedTypeViewModel.passphrase ?? '';
+    confirmPassphraseController.text =
+        widget.seedTypeViewModel.passphrase ?? '';
 
     if (widget.isChildWallet) {
       if (widget.privacySettingsViewModel.type == WalletType.bitcoin) {
@@ -163,7 +167,8 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                     items: BitcoinSeedType.all,
                     selectedItem: widget.seedTypeViewModel.bitcoinSeedType,
                     onItemSelected: (type) {
-                      if (widget.isChildWallet && type != BitcoinSeedType.bip39) {
+                      if (widget.isChildWallet &&
+                          type != BitcoinSeedType.bip39) {
                         showAlertForSelectingNonBIP39DerivationTypeForChildWallets();
                       } else {
                         widget.seedTypeViewModel.setBitcoinSeedType(type);
@@ -195,9 +200,11 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                   return SettingsPickerCell<SeedPhraseLength>(
                     title: S.current.seed_phrase_length,
                     items: SeedPhraseLength.values,
-                    selectedItem: widget.privacySettingsViewModel.seedPhraseLength,
+                    selectedItem:
+                        widget.privacySettingsViewModel.seedPhraseLength,
                     onItemSelected: (SeedPhraseLength length) {
-                      widget.privacySettingsViewModel.setSeedPhraseLength(length);
+                      widget.privacySettingsViewModel
+                          .setSeedPhraseLength(length);
                     },
                   );
                 return Container();
@@ -219,7 +226,9 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                           }),
                           child: Icon(
                             Icons.remove_red_eye,
-                            color: obscurePassphrase ? Colors.black54 : Colors.black26,
+                            color: obscurePassphrase
+                                ? Colors.black54
+                                : Colors.black26,
                           ),
                         ),
                       ),
@@ -241,7 +250,9 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                           }),
                           child: Icon(
                             Icons.remove_red_eye,
-                            color: obscurePassphrase ? Colors.black54 : Colors.black26,
+                            color: obscurePassphrase
+                                ? Colors.black54
+                                : Colors.black26,
                           ),
                         ),
                       ),
@@ -256,12 +267,14 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                       title: S.current.disable_bulletin,
                       value: widget.privacySettingsViewModel.disableBulletin,
                       onValueChange: (BuildContext _, bool value) {
-                        widget.privacySettingsViewModel.setDisableBulletin(value);
+                        widget.privacySettingsViewModel
+                            .setDisableBulletin(value);
                       }),
                   SettingsSwitcherCell(
                     title: S.current.add_custom_node,
                     value: widget.privacySettingsViewModel.addCustomNode,
-                    onValueChange: (_, __) => widget.privacySettingsViewModel.toggleAddCustomNode(),
+                    onValueChange: (_, __) =>
+                        widget.privacySettingsViewModel.toggleAddCustomNode(),
                   ),
                   if (widget.privacySettingsViewModel.addCustomNode)
                     Padding(
@@ -274,7 +287,8 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                 ],
               );
             }),
-            if (widget.privacySettingsViewModel.type == WalletType.bitcoin)
+            if (widget.privacySettingsViewModel.type == WalletType.bitcoin ||
+                widget.privacySettingsViewModel.type == WalletType.decred)
               Builder(builder: (_) {
                 final val = testnetValue ?? false;
                 return SettingsSwitcherCell(
@@ -295,16 +309,20 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
             LoadingPrimaryButton(
               onPressed: () {
                 if (widget.privacySettingsViewModel.addCustomNode) {
-                  if (_formKey.currentState != null && !_formKey.currentState!.validate()) {
+                  if (_formKey.currentState != null &&
+                      !_formKey.currentState!.validate()) {
                     return;
                   }
 
                   widget.nodeViewModel.save();
                 }
-                if (testnetValue == true) {
+                if (testnetValue == true &&
+                    widget.privacySettingsViewModel.type ==
+                        WalletType.bitcoin) {
                   // TODO: add type (mainnet/testnet) to Node class so when switching wallets the node can be switched to a matching type
                   // Currently this is so you can create a working testnet wallet but you need to keep switching back the node if you use multiple wallets at once
-                  widget.nodeViewModel.address = publicBitcoinTestnetElectrumAddress;
+                  widget.nodeViewModel.address =
+                      publicBitcoinTestnetElectrumAddress;
                   widget.nodeViewModel.port = publicBitcoinTestnetElectrumPort;
 
                   widget.nodeViewModel.save();
@@ -316,7 +334,8 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                   }
                 }
 
-                widget.seedTypeViewModel.setPassphrase(passphraseController.text);
+                widget.seedTypeViewModel
+                    .setPassphrase(passphraseController.text);
 
                 Navigator.pop(context);
               },
@@ -332,7 +351,9 @@ class _AdvancedPrivacySettingsBodyState extends State<_AdvancedPrivacySettingsBo
                   S.of(context).settings_can_be_changed_later,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Theme.of(context).extension<NewWalletTheme>()!.hintTextColor,
+                    color: Theme.of(context)
+                        .extension<NewWalletTheme>()!
+                        .hintTextColor,
                   ),
                 ),
               ),

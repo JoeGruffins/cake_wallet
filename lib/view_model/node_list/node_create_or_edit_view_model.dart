@@ -12,10 +12,12 @@ import 'package:permission_handler/permission_handler.dart';
 
 part 'node_create_or_edit_view_model.g.dart';
 
-class NodeCreateOrEditViewModel = NodeCreateOrEditViewModelBase with _$NodeCreateOrEditViewModel;
+class NodeCreateOrEditViewModel = NodeCreateOrEditViewModelBase
+    with _$NodeCreateOrEditViewModel;
 
 abstract class NodeCreateOrEditViewModelBase with Store {
-  NodeCreateOrEditViewModelBase(this._nodeSource, this._walletType, this._settingsStore)
+  NodeCreateOrEditViewModelBase(
+      this._nodeSource, this._walletType, this._settingsStore)
       : state = InitialExecutionState(),
         connectionState = InitialExecutionState(),
         useSSL = false,
@@ -67,9 +69,9 @@ abstract class NodeCreateOrEditViewModelBase with Store {
       _walletType == WalletType.decred; // Allow an empty address.
 
   bool get hasAuthCredentials =>
-      _walletType == WalletType.monero || _walletType == WalletType.wownero || _walletType == WalletType.haven;
-
-  bool get hasTestnetSupport => _walletType == WalletType.bitcoin;
+      _walletType == WalletType.monero ||
+      _walletType == WalletType.wownero ||
+      _walletType == WalletType.haven;
 
   bool get hasPathSupport {
     switch (_walletType) {
