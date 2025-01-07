@@ -144,6 +144,7 @@ ios/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_180.png
 ios/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_120.png
 ios/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png
 ios/Runner/Info.plist
+ios/Runner.xcodeproj/project.pbxproj
 android/app/src/main/res/mipmap-*
 android/app/src/main/res/drawable/ic_launcher.png
 !android/app/src/main/res/drawable/launch_background.xml 
@@ -156,6 +157,7 @@ assets/images/app_logo.png
 /android/app/src/main/AndroidManifest.xml
 
 
+macos/Runner.xcodeproj/project.pbxproj
 macos/Runner/Info.plist
 macos/Runner/DebugProfile.entitlements
 macos/Runner/Release.entitlements

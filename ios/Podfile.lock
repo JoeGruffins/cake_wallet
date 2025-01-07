@@ -2,39 +2,10 @@ PODS:
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
-  - CryptoSwift (1.8.3)
-  - cw_haven (0.0.1):
-    - cw_haven/Boost (= 0.0.1)
-    - cw_haven/Haven (= 0.0.1)
-    - cw_haven/OpenSSL (= 0.0.1)
-    - cw_haven/Sodium (= 0.0.1)
-    - cw_shared_external
-    - Flutter
-  - cw_haven/Boost (0.0.1):
-    - cw_shared_external
-    - Flutter
-  - cw_haven/Haven (0.0.1):
-    - cw_shared_external
-    - Flutter
-  - cw_haven/OpenSSL (0.0.1):
-    - cw_shared_external
-    - Flutter
-  - cw_haven/Sodium (0.0.1):
-    - cw_shared_external
+  - CryptoSwift (1.8.2)
+  - cw_decred (0.0.1):
     - Flutter
   - cw_mweb (0.0.1):
-    - Flutter
-  - cw_decred (0.0.1):
-  - cw_shared_external (0.0.1):
-    - cw_shared_external/Boost (= 0.0.1)
-    - cw_shared_external/OpenSSL (= 0.0.1)
-    - cw_shared_external/Sodium (= 0.0.1)
-    - Flutter
-  - cw_shared_external/Boost (0.0.1):
-    - Flutter
-  - cw_shared_external/OpenSSL (0.0.1):
-    - Flutter
-  - cw_shared_external/Sodium (0.0.1):
     - Flutter
   - device_display_brightness (0.0.1):
     - Flutter
@@ -107,10 +78,10 @@ PODS:
     - FlutterMacOS
   - permission_handler_apple (9.1.1):
     - Flutter
-  - ReachabilitySwift (5.2.4)
-  - SDWebImage (5.19.7):
-    - SDWebImage/Core (= 5.19.7)
-  - SDWebImage/Core (5.19.7)
+  - ReachabilitySwift (5.2.3)
+  - SDWebImage (5.19.2):
+    - SDWebImage/Core (= 5.19.2)
+  - SDWebImage/Core (5.19.2)
   - sensitive_clipboard (0.0.1):
     - Flutter
   - share_plus (0.0.1):
@@ -137,10 +108,8 @@ PODS:
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - CryptoSwift
-  - cw_haven (from `.symlinks/plugins/cw_haven/ios`)
-  - cw_mweb (from `.symlinks/plugins/cw_mweb/ios`)
-  - cw_shared_external (from `.symlinks/plugins/cw_shared_external/ios`)
   - cw_decred (from `.symlinks/plugins/cw_decred/ios`)
+  - cw_mweb (from `.symlinks/plugins/cw_mweb/ios`)
   - device_display_brightness (from `.symlinks/plugins/device_display_brightness/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - devicelocale (from `.symlinks/plugins/devicelocale/ios`)
@@ -181,14 +150,10 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
-  cw_haven:
-    :path: ".symlinks/plugins/cw_haven/ios"
-  cw_mweb:
-    :path: ".symlinks/plugins/cw_mweb/ios"
-  cw_shared_external:
-    :path: ".symlinks/plugins/cw_shared_external/ios"
   cw_decred:
     :path: ".symlinks/plugins/cw_decred/ios"
+  cw_mweb:
+    :path: ".symlinks/plugins/cw_mweb/ios"
   device_display_brightness:
     :path: ".symlinks/plugins/device_display_brightness/ios"
   device_info_plus:
@@ -242,11 +207,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
-  CryptoSwift: 967f37cea5a3294d9cce358f78861652155be483
-  cw_haven: b3e54e1fbe7b8e6fda57a93206bc38f8e89b898a
-  cw_mweb: 87af74f9659fed0c1a2cbfb44413f1070e79e3ae
-  cw_shared_external: 2972d872b8917603478117c9957dfca611845a92
+  CryptoSwift: c63a805d8bb5e5538e88af4e44bb537776af11ea
   cw_decred: 9c0e1df74745b51a1289ec5e91fb9e24b68fa14a
+  cw_mweb: 87af74f9659fed0c1a2cbfb44413f1070e79e3ae
   device_display_brightness: 1510e72c567a1f6ce6ffe393dcd9afd1426034f7
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   devicelocale: 35ba84dc7f45f527c3001535d8c8d104edd5d926
@@ -266,8 +229,8 @@ SPEC CHECKSUMS:
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  ReachabilitySwift: 32793e867593cfc1177f5d16491e3a197d2fccda
-  SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
+  ReachabilitySwift: 7f151ff156cea1481a8411701195ac6a984f4979
+  SDWebImage: dfe95b2466a9823cf9f0c6d01217c06550d7b29a
   sensitive_clipboard: d4866e5d176581536c27bb1618642ee83adca986
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
@@ -282,4 +245,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: e448f662d4c41f0c0b1ccbb78afd57dbf895a597
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
