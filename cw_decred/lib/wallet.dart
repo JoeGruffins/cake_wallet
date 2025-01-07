@@ -89,7 +89,7 @@ abstract class DecredWalletBase
 
   Future<void> init() async {
     updateBalance();
-
+    updateTransactionHistory();
     await walletAddresses.init();
   }
 
@@ -101,6 +101,10 @@ abstract class DecredWalletBase
     // final decoded = json.decode(res);
     // final hash = decoded["hash"] ?? "";
     updateBalance();
+    updateTransactionHistory();
+  }
+
+  void updateTransactionHistory() async {
     var from = 0;
     while (true) {
       // Transactions are returned from newest to oldest. Loop fetching 5 txn
