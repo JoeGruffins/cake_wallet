@@ -13,8 +13,8 @@ fi
 git clone https://github.com/ltcmweb/mwebd
 cd mwebd
 git reset --hard 555349415f76a42ec5c76152b64c4ab9aabc448f
-gomobile bind -target=ios .
-mv -fn ./Mwebd.xcframework ../../../ios/
+gomobile bind -tags=netgo -target=ios . # -tags=netgo resolves 'undefined symbol: _res_9_nclose' error when running
+mv -fn ./Mwebd.xcframework ../../../cw_mweb/ios/
 # cleanup:
 cd ..
 rm -rf mwebd

@@ -15,6 +15,7 @@ cd .. # go to scipts
 ./gen_android_manifest.sh
 cd .. # go to root
 cp -rf ./ios/Runner/InfoBase.plist ./ios/Runner/Info.plist
+cp -rf ./ios/Runner.xcodeproj/project_base.pbxproj ./ios/Runner.xcodeproj/project.pbxproj
 /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName ${APP_IOS_NAME}" ./ios/Runner/Info.plist
 /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier ${APP_IOS_BUNDLE_ID}" ./ios/Runner/Info.plist
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${APP_IOS_VERSION}" ./ios/Runner/Info.plist
@@ -33,10 +34,7 @@ case $APP_IOS_TYPE in
 		;;
 
         $CAKEWALLET)
-		CONFIG_ARGS="--monero --bitcoin --ethereum --polygon --nano --bitcoinCash --solana --tron --wownero --decred"
-		if [ "$CW_WITH_HAVEN" = true ];then
-		    CONFIG_ARGS="$CONFIG_ARGS --haven"
-		fi
+		CONFIG_ARGS="--bitcoin --decred" #--haven
 		;;
 
 	$HAVEN)
