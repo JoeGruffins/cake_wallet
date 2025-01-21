@@ -50,8 +50,7 @@ class WalletListPage extends BasePage {
   Widget body(BuildContext context) => WalletListBody(
         walletListViewModel: walletListViewModel,
         authService: authService,
-        onWalletLoaded:
-            onWalletLoaded ?? (context) => Navigator.of(context).pop(),
+        onWalletLoaded: onWalletLoaded ?? (context) => Navigator.of(context).pop(),
       );
 
   @override
@@ -138,8 +137,8 @@ class WalletListBodyState extends State<WalletListBody> {
 
   @override
   Widget build(BuildContext context) {
-    final newWalletImage = Image.asset('assets/images/new_wallet.png',
-        height: 12, width: 12, color: Colors.white);
+    final newWalletImage =
+        Image.asset('assets/images/new_wallet.png', height: 12, width: 12, color: Colors.white);
     final restoreWalletImage = Image.asset('assets/images/restore_wallet.png',
         height: 12,
         width: 12,
@@ -175,8 +174,8 @@ class WalletListBodyState extends State<WalletListBody> {
                           updateFunction: widget.walletListViewModel.reorderAccordingToWalletList,
                           itemBuilder: (context, index) {
                             final group = widget.walletListViewModel.multiWalletGroups[index];
-                            final groupName = group.groupName ??
-                                '${S.current.wallet_group} ${index + 1}';
+                            final groupName =
+                                group.groupName ?? '${S.current.wallet_group} ${index + 1}';
 
                             widget.walletListViewModel.updateTileState(
                               index,
@@ -200,7 +199,8 @@ class WalletListBodyState extends State<WalletListBody> {
                               trailingWidget: EditWalletButtonWidget(
                                 width: 74,
                                 isGroup: true,
-                                isExpanded: widget.walletListViewModel.expansionTileStateTrack[index]!,
+                                isExpanded:
+                                    widget.walletListViewModel.expansionTileStateTrack[index]!,
                                 onTap: () {
                                   final wallet = widget.walletListViewModel
                                       .convertWalletInfoToWalletListItem(group.wallets.first);
@@ -217,7 +217,8 @@ class WalletListBodyState extends State<WalletListBody> {
                                 },
                               ),
                               childWallets: group.wallets.map((walletInfo) {
-                                return widget.walletListViewModel.convertWalletInfoToWalletListItem(walletInfo);
+                                return widget.walletListViewModel
+                                    .convertWalletInfoToWalletListItem(walletInfo);
                               }).toList(),
                               isSelected: false,
                               onChildItemTapped: (wallet) =>
@@ -343,7 +344,8 @@ class WalletListBodyState extends State<WalletListBody> {
                         context,
                         route: Routes.restoreOptions,
                         arguments: false,
-                        conditionToDetermineIfToUse2FA: widget.walletListViewModel.shouldRequireTOTP2FAForCreatingNewWallets,
+                        conditionToDetermineIfToUse2FA:
+                            widget.walletListViewModel.shouldRequireTOTP2FAForCreatingNewWallets,
                       );
                     } else {
                       Navigator.of(context).pushNamed(Routes.restoreOptions, arguments: false);
@@ -367,7 +369,8 @@ class WalletListBodyState extends State<WalletListBody> {
                           arguments: NewWalletArguments(
                             type: widget.walletListViewModel.currentWalletType,
                           ),
-                          conditionToDetermineIfToUse2FA: widget.walletListViewModel.shouldRequireTOTP2FAForCreatingNewWallets,
+                          conditionToDetermineIfToUse2FA:
+                              widget.walletListViewModel.shouldRequireTOTP2FAForCreatingNewWallets,
                         );
                       } else {
                         Navigator.of(context).pushNamed(
@@ -382,7 +385,8 @@ class WalletListBodyState extends State<WalletListBody> {
                         widget.authService.authenticateAction(
                           context,
                           route: Routes.newWalletType,
-                          conditionToDetermineIfToUse2FA: widget.walletListViewModel.shouldRequireTOTP2FAForCreatingNewWallets,
+                          conditionToDetermineIfToUse2FA:
+                              widget.walletListViewModel.shouldRequireTOTP2FAForCreatingNewWallets,
                         );
                       } else {
                         Navigator.of(context).pushNamed(Routes.newWalletType);
@@ -423,8 +427,8 @@ class WalletListBodyState extends State<WalletListBody> {
         if (!isAuthenticatedSuccessfully) return;
 
         try {
-          final requireHardwareWalletConnection = widget.walletListViewModel
-              .requireHardwareWalletConnection(wallet);
+          final requireHardwareWalletConnection =
+              widget.walletListViewModel.requireHardwareWalletConnection(wallet);
           if (requireHardwareWalletConnection) {
             await Navigator.of(context).pushNamed(
               Routes.connectDevices,
@@ -447,8 +451,7 @@ class WalletListBodyState extends State<WalletListBody> {
             );
           }
 
-          changeProcessText(
-              S.of(context).wallet_list_loading_wallet(wallet.name));
+          changeProcessText(S.of(context).wallet_list_loading_wallet(wallet.name));
           await widget.walletListViewModel.loadWallet(wallet);
           await hideProgressText();
           // only pop the wallets route in mobile as it will go back to dashboard page
@@ -468,9 +471,7 @@ class WalletListBodyState extends State<WalletListBody> {
           final err = e.toString();
           await ExceptionHandler.onError(FlutterErrorDetails(exception: err));
           if (this.mounted) {
-            changeProcessText(S
-                .of(context)
-                .wallet_list_failed_to_load(wallet.name, e.toString()));
+            changeProcessText(S.of(context).wallet_list_failed_to_load(wallet.name, e.toString()));
           }
         }
       },

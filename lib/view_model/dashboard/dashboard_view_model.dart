@@ -5,6 +5,7 @@ import 'dart:io' show Platform;
 import 'package:cake_wallet/.secrets.g.dart' as secrets;
 import 'package:cake_wallet/bitcoin/bitcoin.dart';
 import 'package:cake_wallet/core/key_service.dart';
+import 'package:cake_wallet/decred/decred.dart';
 import 'package:cake_wallet/entities/auto_generate_subaddress_status.dart';
 import 'package:cake_wallet/entities/balance_display_mode.dart';
 import 'package:cake_wallet/entities/exchange_api_mode.dart';
@@ -380,7 +381,9 @@ abstract class DashboardViewModelBase with Store {
   WalletBase<Balance, TransactionHistoryBase<TransactionInfo>, TransactionInfo> wallet;
 
   @computed
-  bool get isTestnet => wallet.type == WalletType.bitcoin && bitcoin!.isTestnet(wallet);
+  bool get isTestnet =>
+      wallet.type == WalletType.bitcoin && bitcoin!.isTestnet(wallet) ||
+      wallet.type == WalletType.decred && decred!.isTestnet(wallet);
 
   @computed
   bool get hasRescan => wallet.hasRescan;
@@ -421,7 +424,8 @@ abstract class DashboardViewModelBase with Store {
       // to not cause work duplication, this will do the job as well, it will be slightly less precise
       // about what happened - but still enough.
       // if (keys['privateSpendKey'] == List.generate(64, (index) => "0").join("")) "Private spend key is 0",
-      if (keys['privateViewKey'] == List.generate(64, (index) => "0").join("") && !wallet.isHardwareWallet)
+      if (keys['privateViewKey'] == List.generate(64, (index) => "0").join("") &&
+          !wallet.isHardwareWallet)
         "private view key is 0",
       // if (keys['publicSpendKey'] == List.generate(64, (index) => "0").join("")) "public spend key is 0",
       if (keys['publicViewKey'] == List.generate(64, (index) => "0").join(""))

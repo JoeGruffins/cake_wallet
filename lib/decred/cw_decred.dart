@@ -13,41 +13,31 @@ class CWDecred extends Decred {
 
   @override
   WalletCredentials createDecredRestoreWalletFromSeedCredentials(
-          {required String name,
-          required String mnemonic,
-          required String password}) =>
-      DecredRestoreWalletFromSeedCredentials(
-          name: name, mnemonic: mnemonic, password: password);
+          {required String name, required String mnemonic, required String password}) =>
+      DecredRestoreWalletFromSeedCredentials(name: name, mnemonic: mnemonic, password: password);
 
   @override
   WalletCredentials createDecredRestoreWalletFromPubkeyCredentials(
-          {required String name,
-          required String pubkey,
-          required String password}) =>
-      DecredRestoreWalletFromPubkeyCredentials(
-          name: name, pubkey: pubkey, password: password);
+          {required String name, required String pubkey, required String password}) =>
+      DecredRestoreWalletFromPubkeyCredentials(name: name, pubkey: pubkey, password: password);
 
   @override
-  WalletService createDecredWalletService(Box<WalletInfo> walletInfoSource,
-      Box<UnspentCoinsInfo> unspentCoinSource) {
+  WalletService createDecredWalletService(
+      Box<WalletInfo> walletInfoSource, Box<UnspentCoinsInfo> unspentCoinSource) {
     return DecredWalletService(walletInfoSource, unspentCoinSource);
   }
 
   @override
-  List<TransactionPriority> getTransactionPriorities() =>
-      DecredTransactionPriority.all;
+  List<TransactionPriority> getTransactionPriorities() => DecredTransactionPriority.all;
 
   @override
-  TransactionPriority getMediumTransactionPriority() =>
-      DecredTransactionPriority.medium;
+  TransactionPriority getMediumTransactionPriority() => DecredTransactionPriority.medium;
 
   @override
-  TransactionPriority getDecredTransactionPriorityMedium() =>
-      DecredTransactionPriority.medium;
+  TransactionPriority getDecredTransactionPriorityMedium() => DecredTransactionPriority.medium;
 
   @override
-  TransactionPriority getDecredTransactionPrioritySlow() =>
-      DecredTransactionPriority.slow;
+  TransactionPriority getDecredTransactionPrioritySlow() => DecredTransactionPriority.slow;
 
   @override
   TransactionPriority deserializeDecredTransactionPriority(int raw) =>
@@ -60,8 +50,7 @@ class CWDecred extends Decred {
   }
 
   @override
-  Object createDecredTransactionCredentials(
-          List<Output> outputs, TransactionPriority priority) =>
+  Object createDecredTransactionCredentials(List<Output> outputs, TransactionPriority priority) =>
       DecredTransactionCredentials(
           outputs
               .map((out) => OutputInfo(
@@ -103,8 +92,7 @@ class CWDecred extends Decred {
       decredAmountToDouble(amount: amount);
 
   @override
-  int formatterStringDoubleToDecredAmount(String amount) =>
-      stringDoubleToDecredAmount(amount);
+  int formatterStringDoubleToDecredAmount(String amount) => stringDoubleToDecredAmount(amount);
 
   @override
   List<Unspent> getUnspents(Object wallet) {
@@ -120,8 +108,7 @@ class CWDecred extends Decred {
 
   @override
   int heightByDate(DateTime date) {
-    final genesisBlocktime =
-        DateTime.fromMillisecondsSinceEpoch(1454954400 * 1000);
+    final genesisBlocktime = DateTime.fromMillisecondsSinceEpoch(1454954400 * 1000);
     final minutesDiff = date.difference(genesisBlocktime).inMinutes;
     // Decred has five minute blocks on mainnet.
     // NOTE: This is off by about a day but is currently unused by decred as we
@@ -136,5 +123,11 @@ class CWDecred extends Decred {
   String pubkey(Object wallet) {
     final decredWallet = wallet as DecredWallet;
     return decredWallet.pubkey;
+  }
+
+  @override
+  bool isTestnet(Object wallet) {
+    final decredWallet = wallet as DecredWallet;
+    return decredWallet.isTestnet;
   }
 }
