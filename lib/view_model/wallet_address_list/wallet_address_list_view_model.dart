@@ -12,11 +12,13 @@ import 'package:cake_wallet/haven/haven.dart';
 import 'package:cake_wallet/monero/monero.dart';
 import 'package:cake_wallet/polygon/polygon.dart';
 import 'package:cake_wallet/solana/solana.dart';
+import 'package:cake_wallet/decred/decred.dart';
 import 'package:cake_wallet/store/app_store.dart';
 import 'package:cake_wallet/store/dashboard/fiat_conversion_store.dart';
 import 'package:cake_wallet/store/settings_store.dart';
 import 'package:cake_wallet/store/yat/yat_store.dart';
 import 'package:cake_wallet/tron/tron.dart';
+import 'package:cake_wallet/zano/zano.dart';
 import 'package:cake_wallet/utils/list_item.dart';
 import 'package:cake_wallet/view_model/wallet_address_list/wallet_account_list_header.dart';
 import 'package:cake_wallet/view_model/wallet_address_list/wallet_address_hidden_list_header.dart';
@@ -205,6 +207,22 @@ class WowneroURI extends PaymentURI {
   }
 }
 
+class ZanoURI extends PaymentURI {
+  ZanoURI({required String amount, required String address})
+      : super(amount: amount, address: address);
+
+  @override
+  String toString() {
+    var base = 'zano:' + address;
+
+    if (amount.isNotEmpty) {
+      base += '?amount=${amount.replaceAll(',', '.')}';
+    }
+
+    return base;
+  }
+}
+
 class DecredURI extends PaymentURI {
   DecredURI({required String amount, required String address})
       : super(amount: amount, address: address);
@@ -314,57 +332,13 @@ abstract class WalletAddressListViewModelBase
         return TronURI(amount: amount, address: address.address);
       case WalletType.wownero:
         return WowneroURI(amount: amount, address: address.address);
+      case WalletType.zano:
+         return ZanoURI(amount: amount, address: address.address);
       case WalletType.decred:
         return DecredURI(amount: amount, address: address.address);
       case WalletType.none:
         throw Exception('Unexpected type: ${type.toString()}');
     }
-
-    if (wallet.type == WalletType.haven) {
-      return HavenURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.bitcoin) {
-      return BitcoinURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.litecoin) {
-      return LitecoinURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.ethereum) {
-      return EthereumURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.bitcoinCash) {
-      return BitcoinCashURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.nano) {
-      return NanoURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.polygon) {
-      return PolygonURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.solana) {
-      return SolanaURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.tron) {
-      return TronURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.wownero) {
-      return WowneroURI(amount: amount, address: address.address);
-    }
-
-    if (wallet.type == WalletType.decred) {
-      return DecredURI(amount: amount, address: address.address);
-    }
-
-    throw Exception('Unexpected type: ${type.toString()}');
   }
 
   @computed
@@ -529,6 +503,14 @@ abstract class WalletAddressListViewModelBase
           isPrimary: true, name: null, address: primaryAddress));
     }
 
+    if (wallet.type == WalletType.decred) {
+      final addrInfos = decred!.getAddressInfos(wallet);
+      addrInfos.forEach((info) {
+        addressList.add(new WalletAddressListItem(isPrimary: false, address: info.address,
+          name: info.label));
+      });
+    }
+
     for (var i = 0; i < addressList.length; i++) {
       if (!(addressList[i] is WalletAddressListItem)) continue;
       (addressList[i] as WalletAddressListItem).isHidden = wallet
@@ -541,6 +523,12 @@ abstract class WalletAddressListViewModelBase
       (addressList[i] as WalletAddressListItem).isManual = wallet
           .walletAddresses.manualAddresses
           .contains((addressList[i] as WalletAddressListItem).address);
+    }
+
+    if (wallet.type == WalletType.zano) {
+      final primaryAddress = zano!.getAddress(wallet);
+
+      addressList.add(WalletAddressListItem(isPrimary: true, name: null, address: primaryAddress));
     }
 
     if (searchText.isNotEmpty) {
@@ -603,7 +591,8 @@ abstract class WalletAddressListViewModelBase
         WalletType.haven,
         WalletType.bitcoinCash,
         WalletType.bitcoin,
-        WalletType.litecoin
+        WalletType.litecoin,
+        WalletType.decred
       ].contains(wallet.type);
 
   @computed

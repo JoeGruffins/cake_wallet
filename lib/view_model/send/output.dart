@@ -1,3 +1,4 @@
+import 'package:cake_wallet/decred/decred.dart';
 import 'package:cake_wallet/di.dart';
 import 'package:cake_wallet/entities/calculate_fiat_amount_raw.dart';
 import 'package:cake_wallet/entities/parse_address_from_domain.dart';
@@ -10,6 +11,7 @@ import 'package:cake_wallet/solana/solana.dart';
 import 'package:cake_wallet/src/screens/send/widgets/extract_address_from_parsed.dart';
 import 'package:cake_wallet/tron/tron.dart';
 import 'package:cake_wallet/wownero/wownero.dart';
+import 'package:cake_wallet/zano/zano.dart';
 import 'package:cw_core/crypto_currency.dart';
 import 'package:cw_core/utils/print_verbose.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +102,9 @@ abstract class OutputBase with Store {
           case WalletType.bitcoinCash:
             _amount = bitcoin!.formatterStringDoubleToBitcoinAmount(_cryptoAmount);
             break;
+          case WalletType.decred:
+            _amount = decred!.formatterStringDoubleToDecredAmount(_cryptoAmount);
+            break;
           case WalletType.haven:
             _amount = haven!.formatterMoneroParseAmount(amount: _cryptoAmount);
             break;
@@ -111,6 +116,9 @@ abstract class OutputBase with Store {
             break;
           case WalletType.wownero:
             _amount = wownero!.formatterWowneroParseAmount(amount: _cryptoAmount);
+            break;
+          case WalletType.zano:
+            _amount = zano!.formatterParseAmount(amount: _cryptoAmount, currency: cryptoCurrencyHandler());
             break;
           default:
             break;
@@ -179,6 +187,10 @@ abstract class OutputBase with Store {
 
       if (_wallet.type == WalletType.polygon) {
         return polygon!.formatterPolygonAmountToDouble(amount: BigInt.from(fee));
+      }
+
+      if (_wallet.type == WalletType.zano) {
+        return zano!.formatterIntAmountToDouble(amount: fee, currency: cryptoCurrencyHandler(), forFee: true);
       }
     } catch (e) {
       printV(e.toString());
@@ -307,6 +319,9 @@ abstract class OutputBase with Store {
         break;
       case WalletType.wownero:
         maximumFractionDigits = 11;
+        break;
+      case WalletType.zano:
+        maximumFractionDigits = 12;
         break;
       default:
         break;
