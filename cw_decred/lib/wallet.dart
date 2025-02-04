@@ -643,4 +643,14 @@ abstract class DecredWalletBase
 
   @override
   String get password => _password;
+
+  @override
+  set isEnabledAutoGenerateSubaddress(bool value) {
+    this.walletAddresses.isEnabledAutoGenerateSubaddress = value;
+  }
+
+  @override
+  bool get isEnabledAutoGenerateSubaddress {
+    return this.walletAddresses.isEnabledAutoGenerateSubaddress;
+  }
 }

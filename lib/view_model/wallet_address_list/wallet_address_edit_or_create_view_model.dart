@@ -72,6 +72,10 @@ abstract class WalletAddressEditOrCreateViewModelBase with Store {
 
     if (isElectrum) await bitcoin!.generateNewAddress(wallet, label);
 
+    if (wallet.type == WalletType.decred) {
+      await decred!.generateNewAddress(wallet, label);
+    }
+
     if (wallet.type == WalletType.monero) {
       await monero
           !.getSubaddressList(wallet)
@@ -114,7 +118,6 @@ abstract class WalletAddressEditOrCreateViewModelBase with Store {
 
     if (wallet.type == WalletType.decred) {
       await decred!.updateAddress(wallet, _item!.address, label);
-      await wallet.save();
       return;
     }
 

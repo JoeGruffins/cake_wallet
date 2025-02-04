@@ -506,7 +506,7 @@ abstract class WalletAddressListViewModelBase
     if (wallet.type == WalletType.decred) {
       final addrInfos = decred!.getAddressInfos(wallet);
       addrInfos.forEach((info) {
-        addressList.add(new WalletAddressListItem(isPrimary: false, address: info.address,
+        addressList.add(WalletAddressListItem(isPrimary: false, address: info.address,
           name: info.label));
       });
     }
