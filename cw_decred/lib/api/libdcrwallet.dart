@@ -36,7 +36,7 @@ Future<void> createWalletAsync(
     "name": name,
     "dataDir": dataDir,
     "password": password,
-    "network": network,
+    "network": "simnet",
     "mnemonic": mnemonic ?? "",
   };
   return compute(createWalletSync, args);
@@ -49,7 +49,7 @@ void createWalletSync(Map<String, String> args) {
   final dataDir = args["dataDir"]!.toCString();
   final password = args["password"]!.toCString();
   final mnemonic = args["mnemonic"]!.toCString();
-  final network = args["network"]!.toCString();
+  final network = "simnet".toCString();
 
   executePayloadFn(
     fn: () => dcrwalletApi.createWallet(name, dataDir, network, password, mnemonic),
@@ -61,7 +61,7 @@ void createWatchOnlyWallet(String walletName, String datadir, String pubkey, Str
   final cName = walletName.toCString();
   final cDataDir = datadir.toCString();
   final cPub = pubkey.toCString();
-  final cNet = network.toCString();
+  final cNet = "simnet".toCString();
   executePayloadFn(
     fn: () => dcrwalletApi.createWatchOnlyWallet(cName, cDataDir, cNet, cPub),
     ptrsToFree: [cName, cDataDir, cNet, cPub],
@@ -73,7 +73,7 @@ Future<void> loadWalletAsync({required String name, required String dataDir, req
   final args = <String, String>{
     "name": name,
     "dataDir": dataDir,
-    "network": net,
+    "network": "simnet",
   };
   return compute(loadWalletSync, args);
 }
@@ -82,7 +82,7 @@ Future<void> loadWalletAsync({required String name, required String dataDir, req
 void loadWalletSync(Map<String, String> args) {
   final name = args["name"]!.toCString();
   final dataDir = args["dataDir"]!.toCString();
-  final network = args["network"]!.toCString();
+  final network = "simnet".toCString();
   executePayloadFn(
     fn: () => dcrwalletApi.loadWallet(name, dataDir, network),
     ptrsToFree: [name, dataDir, network],
