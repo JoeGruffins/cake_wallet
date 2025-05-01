@@ -216,6 +216,7 @@ class WalletRestorePage extends BasePage {
         _formProcessing = false;
         return;
       }
+      walletRestoreViewModel.name = name;
 
       walletRestoreViewModel.state = IsExecutingState();
 
