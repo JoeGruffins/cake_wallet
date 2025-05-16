@@ -18,7 +18,6 @@
 		724FDA327BF191BC29DCAA2E /* Constants.swift in Resources */ = {isa = PBXBuildFile; fileRef = 0CCA7ADAD6FF9185EBBB2BCA /* Constants.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
 		73138617307FA4F838D21D62 /* ServiceLogger.swift in Resources */ = {isa = PBXBuildFile; fileRef = F42258C3697CFE3C8C8D1933 /* ServiceLogger.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		8B1F4FCAA5EB9F3A83D32D5F /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7CD6B6020744E8FA471915D /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -26,13 +25,11 @@
 		A1B4A70C9CFA13AB71662216 /* LnurlPay.swift in Resources */ = {isa = PBXBuildFile; fileRef = 7D3364C03978A8A74B6D586E /* LnurlPay.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
 		A3D5E17CC53DF13FA740DEFA /* RedeemSwap.swift in Resources */ = {isa = PBXBuildFile; fileRef = 9D2F2C9F2555316C95EE7EA3 /* RedeemSwap.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
 		B6C6E59403ACDE44724C12F4 /* ServiceConfig.swift in Resources */ = {isa = PBXBuildFile; fileRef = B3D5E78267F5F18D882FDC3B /* ServiceConfig.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
-		CE918BF82D533ECE007F186E /* MoneroWallet.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE918BF72D533ECE007F186E /* MoneroWallet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CE918BFA2D533ED4007F186E /* WowneroWallet.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE918BF92D533ED4007F186E /* WowneroWallet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CE918BFC2D533ED8007F186E /* ZanoWallet.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE918BFB2D533ED8007F186E /* ZanoWallet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CEAFE4A02C53926F009FF3AD /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C58D93382C00FAC6004BCF69 /* libresolv.tbd */; };
 		CFEFC24F82F78FE747DF1D22 /* LnurlPayInfo.swift in Resources */ = {isa = PBXBuildFile; fileRef = 58C22CBD8C22B9D6023D59F8 /* LnurlPayInfo.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
 		D0D7A0D4E13F31C4E02E235B /* ReceivePayment.swift in Resources */ = {isa = PBXBuildFile; fileRef = 91C524F800843E0A3F17E004 /* ReceivePayment.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
 		D3AD73A327249AFE8F016A51 /* BreezSDK.swift in Resources */ = {isa = PBXBuildFile; fileRef = ABD6FCBB0F4244B090459128 /* BreezSDK.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
+		D506749F5B1B4F7A355C6648 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7CD6B6020744E8FA471915D /* Pods_Runner.framework */; };
 		F5EE19868D6F10D814BF73AD /* SDKNotificationService.swift in Resources */ = {isa = PBXBuildFile; fileRef = 41102141140E57B1DC27FBA1 /* SDKNotificationService.swift */; settings = {ASSET_TAGS = (BreezSDK, ); }; };
 /* End PBXBuildFile section */
 
@@ -43,9 +40,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				CE918BF82D533ECE007F186E /* MoneroWallet.xcframework in CopyFiles */,
-				CE918BFA2D533ED4007F186E /* WowneroWallet.xcframework in CopyFiles */,
-				CE918BFC2D533ED8007F186E /* ZanoWallet.xcframework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,12 +89,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		97C146EB1CF9000F007C117D /* Frameworks */ = {
+		DCD33859F6AD922DCEE68E64 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B1F4FCAA5EB9F3A83D32D5F /* Pods_Runner.framework in Frameworks */,
-				CEAFE4A02C53926F009FF3AD /* libresolv.tbd in Frameworks */,
+				D506749F5B1B4F7A355C6648 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,11 +221,11 @@
 				CE5E8A222BEE19C700608EA1 /* CopyFiles */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
-				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				F6F67323547956BC4F7B67F1 /* [CP] Embed Pods Frameworks */,
 				777FE2B16F25A3E820834145 /* [CP] Copy Pods Resources */,
+				DCD33859F6AD922DCEE68E64 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -491,7 +484,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 32J6BB6VUS;
+				DEVELOPMENT_TEAM = BV37NR7U7S;
 				DISABLED_ARCHS = x86_64;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
@@ -511,7 +504,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fotolockr.cakewallet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joegruff.cakewallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -639,7 +632,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 32J6BB6VUS;
+				DEVELOPMENT_TEAM = BV37NR7U7S;
 				DISABLED_ARCHS = x86_64;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
@@ -660,7 +653,7 @@
 				);
 				MARKETING_VERSION = 1.0.1;
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fotolockr.cakewallet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joegruff.cakewallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -680,7 +673,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = 32J6BB6VUS;
+				DEVELOPMENT_TEAM = BV37NR7U7S;
 				DISABLED_ARCHS = x86_64;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
@@ -700,7 +693,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 1.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fotolockr.cakewallet;
+				PRODUCT_BUNDLE_IDENTIFIER = com.joegruff.cakewallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

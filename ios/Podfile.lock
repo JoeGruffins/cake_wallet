@@ -76,6 +76,7 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - payjoin_flutter (0.20.0)
   - permission_handler_apple (9.3.0):
     - Flutter
   - reown_yttrium (0.0.1):
@@ -126,6 +127,7 @@ DEPENDENCIES:
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - payjoin_flutter (from `.symlinks/plugins/payjoin_flutter/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - reown_yttrium (from `.symlinks/plugins/reown_yttrium/ios`)
   - sensitive_clipboard (from `.symlinks/plugins/sensitive_clipboard/ios`)
@@ -186,6 +188,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  payjoin_flutter:
+    :path: ".symlinks/plugins/payjoin_flutter/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   reown_yttrium:
@@ -208,7 +212,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wakelock_plus/ios"
 
 SPEC CHECKSUMS:
-  connectivity_plus: 481668c94744c30c53b8895afb39159d1e619bdf
+  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   CryptoSwift: e64e11850ede528a02a0f3e768cec8e9d92ecb90
   cw_decred: a02cf30175a46971c1e2fa22c48407534541edc6
   cw_mweb: 3aea2fb35b2bd04d8b2d21b83216f3b8fb768d85
@@ -222,6 +226,7 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
   flutter_local_authentication: 989278c681612f1ee0e36019e149137f114b9d7f
+  flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
   flutter_mailer: 3a8cd4f36c960fb04528d5471097270c19fec1c4
   flutter_secure_storage: 2c2ff13db9e0a5647389bff88b0ecac56e3f3418
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
@@ -230,8 +235,9 @@ SPEC CHECKSUMS:
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  payjoin_flutter: 6397d7b698cdad6453be4949ab6aca1863f6c5e5
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
-  ReachabilitySwift: 32793e867593cfc1177f5d16491e3a197d2fccda
+  reown_yttrium: cee334ade64725b1d83f7b34c706a6aae2696d58
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
   sensitive_clipboard: 161e9abc3d56b3131309d8a321eb4690a803c16b
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
@@ -242,6 +248,7 @@ SPEC CHECKSUMS:
   universal_ble: ff19787898040d721109c6324472e5dd4bc86adc
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
   wakelock_plus: e29112ab3ef0b318e58cfa5c32326458be66b556
+  YttriumWrapper: 31e937fe9fbe0f1314d2ca6be9ce9b379a059966
 
 PODFILE CHECKSUM: 5296465b1c6d14d506230356756826012f65d97a
 
