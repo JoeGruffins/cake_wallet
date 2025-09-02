@@ -548,12 +548,12 @@ class CWBitcoin extends Bitcoin {
     return LitecoinLedgerService(connection);
   }
 
-  @override
-  HardwareWalletService getBitboxHardwareWalletService(
-      bitbox.BitboxManager manager, bool isBitcoin) {
-    if (isBitcoin) return BitcoinBitboxService(manager);
-    return LitecoinBitboxService(manager);
-  }
+  //@override
+  //HardwareWalletService getBitboxHardwareWalletService(
+  //    bitbox.BitboxManager manager, bool isBitcoin) {
+  //  if (isBitcoin) return BitcoinBitboxService(manager);
+  //  return LitecoinBitboxService(manager);
+ // }
 
   @override
   HardwareWalletService getTrezorHardwareWalletService(

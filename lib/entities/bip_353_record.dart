@@ -7,7 +7,7 @@ import 'package:cake_wallet/src/widgets/alert_with_picker_option.dart';
 import 'package:cake_wallet/utils/show_pop_up.dart';
 import 'package:cw_core/crypto_currency.dart';
 import 'package:cw_core/utils/print_verbose.dart';
-import 'package:dnssec_proof/dnssec_proof.dart';
+//import 'package:dnssec_proof/dnssec_proof.dart';
 import 'package:flutter/material.dart';
 
 class Bip353Record {
@@ -34,8 +34,8 @@ class Bip353Record {
     final userPart = parts[0];
     final domainPart = parts[1];
     final bip353Domain = '$userPart.user._bitcoin-payment.$domainPart.';
-    final proof = await Isolate.run(() => DnsProver.getTxtProof(bip353Domain));
-    return base64.encode(proof);
+    //final proof = await Isolate.run(() => DnsProver.getTxtProof(bip353Domain));
+    return "";
   }
 
   static Future<Map<String, String>?> fetchUriByCryptoCurrency(

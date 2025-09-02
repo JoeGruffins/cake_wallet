@@ -20,10 +20,10 @@ dependencies:
   shared_preferences: ^2.0.15
   cw_core:
     path: ../cw_core
-  bitbox:
-    git:
-      url: https://github.com/cake-tech/bitbox-flutter.git
-      ref: Add-Support-For-OP-Return-data
+  #bitbox:
+  #  git:
+  #    url: https://github.com/cake-tech/bitbox-flutter.git
+  #    ref: Add-Support-For-OP-Return-data
   rxdart: ^0.28.0
   cryptography: ^2.0.5
   blockchain_utils:
@@ -58,8 +58,8 @@ dependencies:
     git:
       url: https://github.com/cake-tech/trezor_connect
       ref: 59b3ceec158d3393b20d0c596cab2abcc62ac8e4
-  bitbox_flutter:
-    path: ../scripts/bitbox_flutter
+  #bitbox_flutter:
+    #path: ../scripts/bitbox_flutter
   socks_socket:
     git:
       url: https://github.com/sneurlax/socks_socket

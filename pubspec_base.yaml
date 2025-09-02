@@ -120,8 +120,8 @@ dependencies:
     git:
       url: https://github.com/cake-tech/trezor_connect
       ref: 59b3ceec158d3393b20d0c596cab2abcc62ac8e4
-  bitbox_flutter:
-    path: ./scripts/bitbox_flutter
+  #bitbox_flutter:
+  #  path: ./scripts/bitbox_flutter
   hashlib: 1.19.2
   on_chain:
     git:
@@ -145,12 +145,12 @@ dependencies:
     git:
       url: https://github.com/mrcyjanek/bbqrdart
       ref: e867e3d0156d0b29858100f30adc2625b9dae586
-  dnssec_proof:
-    git:
-      url: https://github.com/MrCyjaneK/dnssec_proof.git
-      ref: b48a9defddce036048bae02e2069ebcbd6824afc
-  torch_dart:
-    path: ./scripts/torch_dart
+  #dnssec_proof:
+  #  git:
+  #    url: https://github.com/MrCyjaneK/dnssec_proof.git
+  #    ref: b48a9defddce036048bae02e2069ebcbd6824afc
+  #torch_dart:
+  #  path: ./scripts/torch_dart
 
 dev_dependencies:
   flutter_test:

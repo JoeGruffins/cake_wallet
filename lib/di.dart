@@ -55,7 +55,7 @@ import 'package:cake_wallet/themes/core/theme_store.dart';
 import 'package:cake_wallet/view_model/dev/monero_background_sync.dart';
 import 'package:cake_wallet/view_model/dev/secure_preferences.dart';
 import 'package:cake_wallet/view_model/dev/shared_preferences.dart';
-import 'package:cake_wallet/view_model/hardware_wallet/bitbox_view_model.dart';
+//import 'package:cake_wallet/view_model/hardware_wallet/bitbox_view_model.dart';
 import 'package:cake_wallet/view_model/hardware_wallet/hardware_wallet_view_model.dart';
 import 'package:cake_wallet/view_model/hardware_wallet/trezor_view_model.dart';
 import 'package:cake_wallet/view_model/integrations/deuro_view_model.dart';
@@ -401,7 +401,7 @@ Future<void> setup({
 
   getIt.registerFactoryParam<HardwareWalletViewModel, HardwareWalletType, void>((type, _) {
     switch(type) {
-      case HardwareWalletType.bitbox: return getIt<BitboxViewModel>();
+      case HardwareWalletType.bitbox:
       case HardwareWalletType.ledger: return getIt<LedgerViewModel>();
       case HardwareWalletType.trezor: return getIt<TrezorViewModel>();
       case HardwareWalletType.cupcake:
@@ -414,7 +414,7 @@ Future<void> setup({
 
   getIt.registerLazySingleton(() => LedgerViewModel());
 
-  getIt.registerLazySingleton(() => BitboxViewModel());
+  //getIt.registerLazySingleton(() => BitboxViewModel());
 
   getIt.registerLazySingleton(() => TrezorConnect("cakewallet://trezor_connect",
       appName: "Cake Wallet"));
