@@ -17,7 +17,7 @@ import 'package:cw_core/utils/print_verbose.dart';
 class ExolixExchangeProvider extends ExchangeProvider {
   ExolixExchangeProvider() : super(pairList: supportedPairs(_notSupported));
 
-  static final apiKey = isMoneroOnly ? secrets.exolixMoneroApiKey : secrets.exolixCakeWalletApiKey;
+  static final apiKey = "";
   static const apiBaseUrl = 'exolix.com';
   static const transactionsPath = '/api/v2/transactions';
   static const ratePath = '/api/v2/rate';
