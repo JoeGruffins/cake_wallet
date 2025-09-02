@@ -111,7 +111,7 @@ import 'package:cw_core/utils/print_verbose.dart';
 import 'package:cw_core/get_height_by_date.dart';
 import 'package:hive/hive.dart';
 import 'package:ledger_flutter_plus/ledger_flutter_plus.dart' as ledger;
-import 'package:bitbox_flutter/bitbox_flutter.dart' as bitbox;
+//import 'package:bitbox_flutter/bitbox_flutter.dart' as bitbox;
 import 'package:blockchain_utils/blockchain_utils.dart';
 import 'package:bip39/bip39.dart' as bip39;
 """;
@@ -137,7 +137,7 @@ import 'package:cw_bitcoin/litecoin_wallet_service.dart';
 import 'package:cw_bitcoin/litecoin_wallet.dart';
 import 'package:cw_bitcoin/hardware/bitcoin_ledger_service.dart';
 import 'package:cw_bitcoin/hardware/litecoin_ledger_service.dart';
-import 'package:cw_bitcoin/hardware/bitbox_service.dart';
+//import 'package:cw_bitcoin/hardware/bitbox_service.dart';
 import 'package:mobx/mobx.dart';
 """;
   const bitcoinCwPart = "part 'cw_bitcoin.dart';";
@@ -248,7 +248,7 @@ abstract class Bitcoin {
   void setLedgerConnection(WalletBase wallet, ledger.LedgerConnection connection);
   void setHardwareWalletService(WalletBase wallet, HardwareWalletService service);
   HardwareWalletService getLedgerHardwareWalletService(ledger.LedgerConnection connection, bool isBitcoin);
-  HardwareWalletService getBitboxHardwareWalletService(bitbox.BitboxManager manager, bool isBitcoin);
+  //HardwareWalletService getBitboxHardwareWalletService(bitbox.BitboxManager manager, bool isBitcoin);
   List<Output> updateOutputs(PendingTransaction pendingTransaction, List<Output> outputs);
   bool txIsReceivedSilentPayment(TransactionInfo txInfo);
   bool txIsMweb(TransactionInfo txInfo);
@@ -696,7 +696,7 @@ import 'package:cw_core/wallet_service.dart';
 import 'package:cw_core/utils/print_verbose.dart';
 import 'package:hive/hive.dart';
 import 'package:ledger_flutter_plus/ledger_flutter_plus.dart' as ledger;
-import 'package:bitbox_flutter/bitbox_flutter.dart' as bitbox;
+//import 'package:bitbox_flutter/bitbox_flutter.dart' as bitbox;
 import 'package:web3dart/web3dart.dart';
 
 """;
@@ -708,9 +708,9 @@ import 'package:cw_evm/evm_chain_transaction_info.dart';
 import 'package:cw_evm/evm_chain_transaction_priority.dart';
 import 'package:cw_evm/evm_chain_wallet_creation_credentials.dart';
 import 'package:cw_evm/hardware/evm_ledger_credentials.dart';
-import 'package:cw_evm/hardware/evm_bitbox_credentials.dart';
+//import 'package:cw_evm/hardware/evm_bitbox_credentials.dart';
 import 'package:cw_evm/evm_chain_wallet.dart';
-import 'package:cw_evm/hardware/evm_chain_bitbox_service.dart';
+//import 'package:cw_evm/hardware/evm_chain_bitbox_service.dart';
 import 'package:cw_evm/hardware/evm_chain_ledger_service.dart';
 
 import 'package:cw_ethereum/ethereum_client.dart';
@@ -779,7 +779,7 @@ abstract class Ethereum {
   
   void setHardwareWalletService(WalletBase wallet, HardwareWalletService service);
   HardwareWalletService getLedgerHardwareWalletService(ledger.LedgerConnection connection);
-  HardwareWalletService getBitboxHardwareWalletService(bitbox.BitboxManager manager);
+  //HardwareWalletService getBitboxHardwareWalletService(bitbox.BitboxManager manager);
   List<String> getDefaultTokenContractAddresses();
   bool isTokenAlreadyAdded(WalletBase wallet, String contractAddress);
 }
@@ -821,7 +821,7 @@ import 'package:cw_core/wallet_service.dart';
 import 'package:cw_core/utils/print_verbose.dart';
 import 'package:hive/hive.dart';
 import 'package:ledger_flutter_plus/ledger_flutter_plus.dart' as ledger;
-import 'package:bitbox_flutter/bitbox_flutter.dart' as bitbox;
+//import 'package:bitbox_flutter/bitbox_flutter.dart' as bitbox;
 import 'package:web3dart/web3dart.dart';
 
 """;
@@ -833,9 +833,9 @@ import 'package:cw_evm/evm_chain_transaction_info.dart';
 import 'package:cw_evm/evm_chain_transaction_priority.dart';
 import 'package:cw_evm/evm_chain_wallet_creation_credentials.dart';
 import 'package:cw_evm/hardware/evm_ledger_credentials.dart';
-import 'package:cw_evm/hardware/evm_bitbox_credentials.dart';
+//import 'package:cw_evm/hardware/evm_bitbox_credentials.dart';
 import 'package:cw_evm/evm_chain_wallet.dart';
-import 'package:cw_evm/hardware/evm_chain_bitbox_service.dart';
+//import 'package:cw_evm/hardware/evm_chain_bitbox_service.dart';
 import 'package:cw_evm/hardware/evm_chain_ledger_service.dart';
 
 import 'package:cw_polygon/polygon_client.dart';
@@ -894,7 +894,7 @@ abstract class Polygon {
   
   void setHardwareWalletService(WalletBase wallet, HardwareWalletService service);
   HardwareWalletService getLedgerHardwareWalletService(ledger.LedgerConnection connection);
-  HardwareWalletService getBitboxHardwareWalletService(bitbox.BitboxManager manager);
+  //HardwareWalletService getBitboxHardwareWalletService(bitbox.BitboxManager manager);
   List<String> getDefaultTokenContractAddresses();
   bool isTokenAlreadyAdded(WalletBase wallet, String contractAddress);
 }

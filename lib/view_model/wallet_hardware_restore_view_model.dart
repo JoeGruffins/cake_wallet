@@ -104,8 +104,8 @@ abstract class WalletHardwareRestoreViewModelBase extends WalletCreationVM with 
 
     if (hardwareWalletVM is LedgerViewModel)
       credentials.hardwareWalletType = HardwareWalletType.ledger;
-    else
-      credentials.hardwareWalletType = HardwareWalletType.bitbox;
+    //else
+      //credentials.hardwareWalletType = HardwareWalletType.bitbox;
 
     return credentials;
   }
