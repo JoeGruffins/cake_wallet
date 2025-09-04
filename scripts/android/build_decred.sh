@@ -6,17 +6,19 @@ cd "$(dirname "$0")"
 
 CW_DECRED_DIR=$(realpath ../..)/cw_decred
 LIBWALLET_PATH="${PWD}/decred/libwallet"
-LIBWALLET_URL="https://github.com/decred/libwallet.git"
-LIBWALLET_VERSION="05f8d7374999400fe4d525eb365c39b77d307b14"
+LIBWALLET_ON_FILE="${HOME}/git/libwallet"
+#LIBWALLET_URL="https://github.com/decred/libwallet.git"
+#LIBWALLET_VERSION="05f8d7374999400fe4d525eb365c39b77d307b14"
 
 if [[ -e $LIBWALLET_PATH ]]; then
     rm -fr $LIBWALLET_PATH || true
 fi
 mkdir -p $LIBWALLET_PATH || true
 
-git clone $LIBWALLET_URL $LIBWALLET_PATH
+#git clone $LIBWALLET_URL $LIBWALLET_PATH
+cp -a ${LIBWALLET_ON_FILE}/* $LIBWALLET_PATH
 cd $LIBWALLET_PATH
-git checkout $LIBWALLET_VERSION
+#git checkout $LIBWALLET_VERSION
 
 if [[ "x$ANDROID_HOME" == "x" ]];
 then
