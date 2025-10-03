@@ -2,7 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cw_mweb/generated_bindings.g.dart';
+//import 'package:cw_mweb/generated_bindings.g.dart';
 import 'package:ffi/ffi.dart';
 
 String libPath = (() {
@@ -14,9 +14,9 @@ String libPath = (() {
 })();
 
 class MWebFfi {
-  late final MWebFlutter lib;
+  //late final MWebFlutter lib;
 
-  MWebFfi() : lib = MWebFlutter(DynamicLibrary.open(libPath));
+  MWebFfi();// : lib = MWebFlutter(DynamicLibrary.open(libPath));
 
   static MWebFfi instance = MWebFfi();
 
@@ -25,7 +25,8 @@ class MWebFfi {
     final dataDir_ = dataDir.toNativeUtf8().cast<Char>();
     final nodeUri_ = nodeUri.toNativeUtf8().cast<Char>();
 
-    final port = lib.StartServer(chain, dataDir_, nodeUri_);
+    //final port = lib.StartServer(chain, dataDir_, nodeUri_);
+    final port = 1234;
 
     calloc.free(chain);
     calloc.free(dataDir_);
@@ -34,7 +35,7 @@ class MWebFfi {
     return port;
   }
 
-  void stop() => lib.StopServer();
+  void stop() => {};//lib.StopServer();
 
   String addresses(
       Uint8List scanSecret, Uint8List spendPub, int fromIndex, int toIndex) {
@@ -48,14 +49,14 @@ class MWebFfi {
       spendPubKeyPtr[k] = spendPub[k];
     }
 
-    final Pointer<Char> resultPtr = lib.Addresses(
-      scanSecretPtr.cast(),
-      scanSecret.length,
-      spendPubKeyPtr.cast(),
-      spendPub.length,
-      fromIndex,
-      toIndex,
-    );
+    final Pointer<Char> resultPtr = calloc<Char>();//lib.Addresses(
+    //  scanSecretPtr.cast(),
+    //  scanSecret.length,
+    //  spendPubKeyPtr.cast(),
+    //  spendPub.length,
+    //  fromIndex,
+    //  toIndex,
+    //);
 
     final result = resultPtr.cast<Utf8>().toDartString();
 

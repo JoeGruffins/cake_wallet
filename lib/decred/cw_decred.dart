@@ -19,6 +19,14 @@ class CWDecred extends Decred {
       DecredRestoreWalletFromPubkeyCredentials(name: name, pubkey: pubkey, password: password);
 
   @override
+  WalletCredentials createDecredHardwareWalletCredentials(
+          {required String name,
+          required HardwareAccountData accountData,
+          WalletInfo? walletInfo}) =>
+      DecredRestoreWalletFromHardwareCredentials(
+          name: name, hwAccountData: accountData, walletInfo: walletInfo);
+
+  @override
   WalletService createDecredWalletService(
       Box<WalletInfo> walletInfoSource, Box<UnspentCoinsInfo> unspentCoinSource) {
     return DecredWalletService(walletInfoSource, unspentCoinSource);
@@ -110,5 +118,29 @@ class CWDecred extends Decred {
   String pubkey(Object wallet) {
     final decredWallet = wallet as DecredWallet;
     return decredWallet.pubkey;
+  }
+
+  @override
+  Future<List<HardwareAccountData>> getHardwareWalletAccounts(LedgerViewModel ledgerVM,
+      {int index = 0, int limit = 5}) async {
+    final ws = LedgerWalletService(ledgerVM.connection);
+    try {
+      return ws.getAvailableAccounts(index: index, limit: limit);
+    } catch (err) {
+      printV(err);
+      throw err;
+    }
+  }
+
+  @override
+  void setHardwareWalletService(WalletBase wallet, HardwareWalletService service) {
+    final decredWallet = wallet as DecredWallet;
+    final ledgerService = service as LedgerWalletService;
+    decredWallet.ledgerWalletService = ledgerService;
+  }
+
+  @override
+  HardwareWalletService getLedgerHardwareWalletService(ledger.LedgerConnection connection) {
+    return LedgerWalletService(connection);
   }
 }

@@ -53,7 +53,7 @@ class TrocadorExchangeProvider extends ExchangeProvider {
     CryptoCurrency.zaddr,
   ];
 
-  static final apiKey = isMoneroOnly ? secrets.trocadorMoneroApiKey : secrets.trocadorApiKey;
+  static final apiKey = "";
   static const clearNetAuthority = 'api.trocador.app';
   static const onionApiAuthority = clearNetAuthority;
   // static const onionApiAuthority = 'trocadorfyhlu27aefre5u7zri66gudtzdyelymftvr4yjwcxhfaqsid.onion';

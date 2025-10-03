@@ -6,17 +6,19 @@ cd "$(dirname "$0")"
 
 CW_DECRED_DIR=$(realpath ../..)/cw_decred
 LIBWALLET_PATH="${PWD}/decred/libwallet"
-LIBWALLET_URL="https://github.com/decred/libwallet.git"
-LIBWALLET_VERSION="05f8d7374999400fe4d525eb365c39b77d307b14"
+LIBWALLET_ON_FILE="${HOME}/git/libwallet"
+#LIBWALLET_URL="https://github.com/decred/libwallet.git"
+#LIBWALLET_VERSION="05f8d7374999400fe4d525eb365c39b77d307b14"
 
 if [[ -e $LIBWALLET_PATH ]]; then
     rm -fr $LIBWALLET_PATH || true
 fi
 mkdir -p $LIBWALLET_PATH || true
 
-git clone $LIBWALLET_URL $LIBWALLET_PATH
+#git clone $LIBWALLET_URL $LIBWALLET_PATH
+cp -a ${LIBWALLET_ON_FILE}/* $LIBWALLET_PATH
 cd $LIBWALLET_PATH
-git checkout $LIBWALLET_VERSION
+#git checkout $LIBWALLET_VERSION
 
 if [[ "x$ANDROID_HOME" == "x" ]];
 then
@@ -38,7 +40,7 @@ fi
 
 export NDK_BIN_PATH="${ANDROID_HOME}/ndk/${ANDROID_NDK_VERSION}/toolchains/llvm/prebuilt/$(uname | tr '[:upper:]' '[:lower:]')-x86_64/bin"
 export ANDROID_API_VERSION=21
-# export CPATH="$(clang -v 2>&1 | grep "Selected GCC installation" | rev | cut -d' ' -f1 | rev)/include"
+export CPATH="$(clang -v 2>&1 | grep "Selected GCC installation" | rev | cut -d' ' -f1 | rev)/include"
 
 for arch in "aarch" "aarch64" "x86_64"
 do

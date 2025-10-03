@@ -28,7 +28,7 @@ class AnonPayApi {
   static const anonPayPath = '/anonpay';
   static const anonPayStatus = '/anonpay/status';
   static const coinPath = 'api/coin';
-  static final apiKey = isMoneroOnly ? secrets.trocadorMoneroApiKey : secrets.trocadorApiKey;
+  static final apiKey = "";
 
   Future<AnonpayStatusResponse> paymentStatus(String id) async {
     final response = await ProxyWrapper().get(
