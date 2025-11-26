@@ -244,11 +244,11 @@ abstract class WalletRestoreViewModelBase extends WalletCreationVM with Store {
     }
 
     if (mode == WalletRestoreMode.keys) {
-      final viewKey = options['viewKey'] as String?;
-      final spendKey = options['spendKey'] as String?;
-      final scanSecret = options['scanSecret'] as String?;
-      final spendPubkey = options['spendPubkey'] as String?;
-      final address = options['address'] as String?;
+      final viewKey = options?['viewKey'] as String?;
+      final spendKey = options?['spendKey'] as String?;
+      final scanSecret = options?['scanSecret'] as String?;
+      final spendPubkey = options?['spendPubkey'] as String?;
+      final address = options?['address'] as String?;
 
       switch (type) {
         case WalletType.bitcoin:

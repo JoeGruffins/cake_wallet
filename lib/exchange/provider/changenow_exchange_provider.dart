@@ -29,8 +29,7 @@ class ChangeNowExchangeProvider extends ExchangeProvider {
     CryptoCurrency.xhv,
   ];
 
-  static final apiKey =
-      isMoneroOnly ? secrets.changeNowMoneroApiKey : secrets.changeNowCakeWalletApiKey;
+  static final apiKey = "";
   static const apiAuthority = 'api.changenow.io';
   static const createTradePath = '/v2/exchange';
   static const findTradeByIdPath = '/v2/exchange/by-id';

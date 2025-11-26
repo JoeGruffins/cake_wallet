@@ -19,7 +19,7 @@ class SwapsXyzExchangeProvider extends ExchangeProvider {
 
   static const List<CryptoCurrency> _notSupported = [];
 
-  static final _apiKey = secrets.swapsXyzApiKey;
+  static final _apiKey = "";
   static const _baseUrl = 'api-v2.swaps.xyz';
   static const _getChainList = 'api/getChainList';
   static const _getPaths = 'api/getPaths';
